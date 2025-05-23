@@ -1,0 +1,36 @@
+cluster:
+  name: kind-delta
+
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+
+ipam:
+  mode: kubernetes
+
+operator:
+  replicas: 1
+
+routingMode: tunnel
+tunnelProtocol: vxlan
+
+# note that kube-proxy has been disabled in the kind config
+kubeProxyReplacement: true
+
+# Cilium Routing
+routingMode: native
+ipv4NativeRoutingCIDR: 10.244.0.0/16
+enableIPv4Masquerade: true
+autoDirectNodeRoutes: true
+
+# ARP announcements
+l2announcements:
+  enabled: true
+
+# enable Kubrentes Ingress support
+ingressController:
+  enabled: true
+  # create a dedicated loadbalancer for the Ingress
+  loadbalancerMode: dedicated

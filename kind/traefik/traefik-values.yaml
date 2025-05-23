@@ -1,0 +1,27 @@
+---
+providers:
+  kubernetesCRD:
+    namespaces:
+      - default
+      - traefik
+  kubernetesIngress:
+    namespaces:
+      - default
+      - traefik
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+ports:
+  web:
+    nodePort: 32080
+  websecure:
+    nodePort: 32443
+  traefik:
+    expose:
+      default: true
+    nodePort: 32090
+
+service:
+    type: NodePort
