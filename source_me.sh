@@ -18,10 +18,10 @@ export KUBERNETES_PLAYGROUND_PATH=$__dir
 unset __dir
 unset __source
 
-#for file in `\ls $KUBERNETES_PLAYGROUND_PATH/var/aliases/*.sh`
-#do 
-#        source $file
-#done
+for file in `\ls $KUBERNETES_PLAYGROUND_PATH/var/aliases/*.sh`
+do 
+        source $file
+done
 
 export PATH=$KUBERNETES_PLAYGROUND_PATH/bin:$PATH
 PATH=$(echo "$PATH" | awk -v RS=':' -v ORS=":" '!a[$1]++{if (NR > 1) printf ORS; printf $a[$1]}')
