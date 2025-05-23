@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ab-team
+spec:
+  ingressClassName: cilium
+  rules:
+  - http:
+      paths:
+      - path: /a-team
+        pathType: Prefix
+        backend:
+          service:
+            name: a-team
+            port:
+              number: 5678
+      - path: /b-team
+        pathType: Prefix
+        backend:
+          service:
+            name: b-team
+            port:
+              number: 5678

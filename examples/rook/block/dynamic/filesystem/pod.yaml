@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-rook-ceph-block-dynamic
+spec:
+  volumes:
+    - name: rook-block-device
+      persistentVolumeClaim:
+        claimName: example-rook-block-device
+  containers:
+    - name: alpine
+      image: alpine:latest
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - name: rook-block-device
+          mountPath: /srv

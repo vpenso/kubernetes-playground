@@ -1,0 +1,24 @@
+# vi: nospell
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-example-rook-ceph-block-ephemeral
+spec:
+  containers:
+    - name: alpine
+      image: alpine:latest
+      command: ["sleep", "infinity"]
+      volumeMounts:
+        - mountPath: "/srv"
+          name: pvc-example-rook-ceph-block-ephemeral
+  volumes:
+    - name: pvc-example-rook-ceph-block-ephemeral
+      ephemeral:
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            storageClassName: rook-ceph-block
+            resources:
+              requests:
+                storage: 1Gi

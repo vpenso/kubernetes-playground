@@ -1,0 +1,32 @@
+# vi: nospell
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystem
+metadata:
+  name: example-rook-ceph-filesystem
+  namespace: rook-ceph
+spec:
+  metadataPool:
+    replicated:
+      size: 1
+      requireSafeReplicaSize: false
+  dataPools:
+    - name: example-no-replication
+      failureDomain: osd
+      replicated:
+        size: 1
+        requireSafeReplicaSize: false
+  preserveFilesystemOnDelete: false
+  metadataServer:
+    activeCount: 1
+    activeStandby: true
+---
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystemSubVolumeGroup
+metadata:
+  name: example-rook-ceph-filesystem
+  namespace: rook-ceph
+spec:
+  name: rook-ceph-volume
+  filesystemName: example-rook-ceph-filesystem
+  pinning:
+    distributed: 1

@@ -1,0 +1,29 @@
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystem
+metadata:
+  name: example-storage
+  namespace: rook-ceph
+spec:
+  metadataPool:
+    replicated:
+      size: 3
+  dataPools:
+    - name: replicated
+      failureDomain: host
+      replicated:
+        size: 3
+  preserveFilesystemOnDelete: true
+  metadataServer:
+    activeCount: 1
+    activeStandby: true
+---
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystemSubVolumeGroup       # SVG abstraction for data management
+metadata:
+  name: example-storage
+  namespace: rook-ceph
+spec:
+  name: csi
+  filesystemName: example-storage        # file-system the SVG belongs to
+  pinning:                               # defines data placement
+    distributed: 1                       # “spread-the-data-around”

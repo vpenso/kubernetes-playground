@@ -1,0 +1,23 @@
+# vi: nospell
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: example-rook-ceph-file-system
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 1Gi
+  csi:
+    driver: cephfs.csi.ceph.com
+    nodeStageSecretRef:
+      name: rook-csi-cephfs-node
+      namespace: rook-ceph
+    volumeAttributes:
+      "clusterID": "rook-ceph"
+      "fsName": "example-rook-ceph-filesystem"
+      "staticVolume": "true"
+      "rootPath": /volumes/rook-ceph-volume/example-subvolume
+    volumeHandle: example-rook-ceph-volume
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem

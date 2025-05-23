@@ -1,0 +1,24 @@
+# vi: nospell
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: example-rook-block-device
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  csi:
+    driver: rook-ceph.rbd.csi.ceph.com
+    fsType: ext4
+    volumeHandle: example-rook-block-image
+    volumeAttributes:
+      "clusterID": "rook-ceph"
+      "pool": "replicapool"
+      "staticVolume": "true"
+      "imageFeatures": "layering"
+    nodeStageSecretRef:
+      name: rook-csi-rbd-node
+      namespace: rook-ceph
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem

@@ -1,0 +1,22 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: a-team
+  labels:
+    app: a-team
+spec:
+  containers:
+    - name: a-team
+      image: hashicorp/http-echo
+      args:
+        - "-text=a-team"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: a-team
+spec:
+  selector:
+    app: a-team
+  ports:
+    - port: 5678
