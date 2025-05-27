@@ -1,10 +1,10 @@
+# Slinky Cluster
 
-Slinky[^f3Glk]
+Slinky[^f3Glk] …`cluster-up.sh` start a Kind cluster…
 
 [^f3Glk]: Slinky Project, GitHub  
 <https://github.com/SlinkyProject>
 
-`cluster-up.sh` start a Kind cluster…
 
 - …with cloud provider for load-balancing service IPs
 - …deploys `cert-manager` and `prometheus` via Helm chars
@@ -12,6 +12,12 @@ Slinky[^f3Glk]
 
 [^l78gh]: `slurm-operator`, Slinky Documentation  
 <https://slinky.schedmd.com/docs/slurm-operator>
+
+```bash
+# clean up
+kind delete cluster --name slinky
+pkill -f cloud-provider-kind
+```
 
 Test basic functionality of the cluster…
 
