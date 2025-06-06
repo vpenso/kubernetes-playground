@@ -3,6 +3,7 @@ kind: Prometheus
 metadata:
   name: prometheus
 spec:
+  # needs to be set to a list of labels to match ScrapeConfigs
   scrapeConfigSelector:
     matchLabels:
       prometheus: example-prometheus

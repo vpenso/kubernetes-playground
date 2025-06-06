@@ -7,6 +7,8 @@ metadata:
 spec:
   staticConfigs:
     - labels:
-        job: prometheus
+        job: promlab
       targets:
-        - prometheus.demo.do.prometheus.io:9090
+        - demo.promlabs.com:10000
+        - demo.promlabs.com:10001
+        - demo.promlabs.com:10002
