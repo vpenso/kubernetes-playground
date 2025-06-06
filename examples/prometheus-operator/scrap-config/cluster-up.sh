@@ -2,11 +2,6 @@
 
 kind create cluster --config etc/kind-config.yaml
 
-# start cloud provider
-logs=$(mktemp /tmp/cloud-provider-XXXXX.log)
-echo "Cloud provider logs to $logs"
-cloud-provider-kind 2>$logs &
-
 name=$( grep name etc/kind-config.yaml | cut -d: -f2 | tr -d ' ')
 kubectl label node $name-control-plane node.kubernetes.io/exclude-from-external-load-balancers-
 
