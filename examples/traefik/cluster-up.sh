@@ -11,5 +11,5 @@ helm repo update
 namespace=traefik
 echo "Install Traefik to namespace $namespace"
 helm install traefik traefik/traefik \
-        -n $namespace --create-namespace -f traefik-values.yaml
+        -n $namespace --create-namespace -f etc/traefik-values.yaml
 kubectl -n $namespace get pods
