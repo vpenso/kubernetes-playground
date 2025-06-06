@@ -9,7 +9,10 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 
 namespace=example
-echo "Install Prometheus to namespace $namespace"
-helm install prometheus prometheus-community/prometheus \
-        --create-namespace --namespace $namespace > helm-install.log
-kubectl -n $namespace get pods
+helm_log=helm-install.log
+password="password1234!"
+echo "Install Prometheus sTack to namespace $namespace ...$helm_log"
+helm install prom-stack prometheus-community/kube-prometheus-stack \
+        --create-namespace --namespace $namespace \
+        --set grafana.adminPassword="$password" > $helm_log
+echo "Grafana admin/$password"
