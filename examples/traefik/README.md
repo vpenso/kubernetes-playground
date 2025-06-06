@@ -1,12 +1,38 @@
 # Traefik
 
-`cluster-up.sh` starts a Kind cluster and installs Traefik
+[`cluster-up.sh`](cluster-up) starts a Kind cluster, install & configure Traefik ingress
 
 Access the Traefik dashboard <http://localhost:9000/dashboard/>
 
 ```bash
 # remove the test cluster
 kind delete cluster --name traefik
+```
+
+## Usage
+
+Proxy[^kl56g] an application …see [`example.yaml`](example.yaml)
+
+[^kl56g]: Quick Start, Traefik Documentation  
+<https://doc.traefik.io/traefik/getting-started/quick-start-with-kubernetes/#proxying-applications>
+
+- …deployment of an application `traefik/whoami`[^fg47j] on port 80
+- …service `whoami` on port 80
+- …ingress …redirect any incoming requests starting with `/` to the `whoami:80` service
+
+[^fg47j]: Traefik Whoami Server, GitHub  
+<https://github.com/traefik/whoami>
+
+```bash
+# apply the example application
+kubectl apply -f example.yaml
+
+# check the resources
+kubectl get service whoami
+kubectl get ingress whoami-ingress
+
+# send a GET request
+curl localhost:8080
 ```
 
 ## Configuration
@@ -54,30 +80,3 @@ kubectl -n traefik describe deployments.apps traefik
 kubectl describe GatewayClass traefik
 ```
 
-## Usage
-
-Proxy[^kl56g] an application…
-
-[^kl56g]: Quick Start, Traefik Documentation  
-<https://doc.traefik.io/traefik/getting-started/quick-start-with-kubernetes/#proxying-applications>
-
-- …deployment of an application `traefik/whoami`[^fg47j] on port 80
-- …service `whoami` on port 80
-- …ingress …redirect any incoming requests starting with `/` to the `whoami:80` service
-
-[^fg47j]: Traefik Whoami Server, GitHub  
-<https://github.com/traefik/whoami>
-
-```bash
-# apply the example application
-kubectl apply -f example.yaml
-
-# check the resources
-kubectl get service whoami
-kubectl get ingress whoami-ingress
-
-# send a GET request
-curl localhost:8080
-```
-
-<http://localhost>
