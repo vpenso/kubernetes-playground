@@ -1,6 +1,6 @@
 # Traefik
 
-[`cluster-up.sh`](cluster-up) starts a Kind cluster, install & configure Traefik ingress
+[`cluster-up.sh`](cluster-up.sh) starts a Kind cluster, install & configure Traefik ingress
 
 Access the Traefik dashboard <http://localhost:9000/dashboard/>
 
