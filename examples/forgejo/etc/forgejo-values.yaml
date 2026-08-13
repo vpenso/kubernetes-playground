@@ -1,0 +1,29 @@
+---
+service:
+  http:
+    type: NodePort
+    port: 3000
+    nodePort: 32080
+  ssh:
+    type: NodePort
+    port: 22
+    nodePort: 32022
+
+gitea:
+  admin:
+    username: root
+    password: root
+
+persistence:
+  enabled: true
+  storageClass: standard
+  size: 5Gi
+
+ingress:
+  enabled: false
+
+database:
+  type: sqlite
+
+cache:
+  enabled: false
