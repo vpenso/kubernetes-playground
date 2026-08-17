@@ -1,0 +1,7 @@
+# Production namespace — only Guaranteed QoS pods allowed
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: solar-production
+  labels:
+    environment: prod
