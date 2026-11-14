@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520"
+     font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5"
+            orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="520" fill="#ffffff"/>
+
+  <text x="640" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">01 Basic — Kind &amp; Cilium (VXLAN Tunnel)</text>
+  <text x="640" y="64" text-anchor="middle" font-size="14" fill="#475569">three kind nodes on one Docker bridge · pod traffic is VXLAN-encapsulated · kube-proxy is still present</text>
+
+  <!-- DOCKER NETWORK TIER -->
+  <rect x="40" y="90" width="1200" height="246" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="110" font-size="12" font-weight="700" letter-spacing="2" fill="#0284c7">DOCKER NETWORK KIND · BRIDGE 172.18.0.0/16</text>
+
+  <!-- NODE 1: CONTROL PLANE -->
+  <rect x="60" y="120" width="340" height="200" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.6"/>
+  <text x="230" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">basic-control-plane <tspan fill="#475569" font-size="11.5">· 172.18.0.x</tspan><tspan fill="#10b981" font-size="11.5"> · 10.244.0.0/24</tspan></text>
+  <rect x="76" y="150" width="308" height="64" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="92" y="174" font-size="13" font-weight="700" fill="#047857">kube API server</text>
+  <text x="92" y="196" font-size="11.5" fill="#475569">172.18.0.x</text>
+  <rect x="76" y="226" width="308" height="84" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4" stroke-dasharray="5 4"/>
+  <text x="92" y="250" font-size="13" font-weight="700" fill="#047857">kube-proxy</text>
+  <text x="92" y="272" font-size="11.5" fill="#475569">Services via iptables</text>
+  <text x="92" y="292" font-size="11.5" fill="#475569">removed in stage 02</text>
+
+  <!-- NODE 2: WORKER -->
+  <rect x="470" y="120" width="340" height="200" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.7" stroke-width="1.5"/>
+  <text x="640" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">basic-worker <tspan fill="#475569" font-size="11.5">· 172.18.0.x</tspan><tspan fill="#10b981" font-size="11.5"> · 10.244.1.0/24</tspan></text>
+  <rect x="486" y="150" width="308" height="64" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.45"/>
+  <text x="502" y="174" font-size="13" font-weight="700" fill="#047857">pod A · nginx <tspan fill="#10b981" font-size="11">· :80</tspan></text>
+  <text x="502" y="196" font-size="11.5" fill="#475569">IP 10.244.1.x</text>
+  <rect x="486" y="226" width="308" height="84" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="502" y="250" font-size="13" font-weight="700" fill="#047857">cilium agent</text>
+  <text x="502" y="272" font-size="11.5" fill="#475569">routing: tunnel · vxlan</text>
+  <text x="502" y="292" font-size="11.5" fill="#475569">encaps + decaps packets</text>
+  <line x1="640" y1="218" x2="640" y2="222" stroke="#475569" stroke-width="2"/>
+  <circle cx="640" cy="220" r="11" fill="#10b981"/>
+  <text x="640" y="224" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+
+  <!-- NODE 3: WORKER2 -->
+  <rect x="880" y="120" width="340" height="200" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.7" stroke-width="1.5"/>
+  <text x="1050" y="140" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">basic-worker2 <tspan fill="#475569" font-size="11.5">· 172.18.0.x</tspan><tspan fill="#10b981" font-size="11.5"> · 10.244.2.0/24</tspan></text>
+  <rect x="896" y="150" width="308" height="64" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.45"/>
+  <text x="912" y="174" font-size="13" font-weight="700" fill="#047857">pod B · curl</text>
+  <text x="912" y="196" font-size="11.5" fill="#475569">IP 10.244.2.x</text>
+  <rect x="896" y="226" width="308" height="84" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="912" y="250" font-size="13" font-weight="700" fill="#047857">cilium agent</text>
+  <text x="912" y="272" font-size="11.5" fill="#475569">routing: tunnel · vxlan</text>
+  <text x="912" y="292" font-size="11.5" fill="#475569">decaps + delivers pod B</text>
+  <line x1="1050" y1="218" x2="1050" y2="222" stroke="#475569" stroke-width="2"/>
+  <circle cx="1050" cy="220" r="11" fill="#10b981"/>
+  <text x="1050" y="224" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+
+  <!-- VXLAN ARROW BETWEEN AGENTS -->
+  <line x1="798" y1="268" x2="892" y2="268" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="845" cy="268" r="11" fill="#0284c7"/>
+  <text x="845" y="272" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+
+  <!-- ANNOTATION: PACKET TO THE EXAMPLE BOX -->
+  <line x1="845" y1="283" x2="845" y2="352" stroke="#64748b" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- NOTES BELOW THE TIER -->
+  <rect x="60" y="356" width="360" height="80" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.55"/>
+  <text x="80" y="380" font-size="14.5" font-weight="700" fill="#4c1d95">IPAM — kubernetes</text>
+  <text x="80" y="402" font-size="12.5" fill="#475569">pod subnet 10.244.0.0/16</text>
+  <text x="80" y="422" font-size="12.5" fill="#475569">one /24 per node · order can change</text>
+
+  <rect x="440" y="356" width="360" height="80" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+  <text x="460" y="380" font-size="14.5" font-weight="700" fill="#6d28d9">kube-proxy present</text>
+  <text x="460" y="402" font-size="12.5" fill="#475569">Services via iptables</text>
+  <text x="460" y="422" font-size="12.5" fill="#475569">replaced in stage 02</text>
+
+  <rect x="820" y="356" width="360" height="80" rx="10" fill="#f8fafc" stroke="#64748b" stroke-opacity="0.5"/>
+  <text x="840" y="380" font-size="14.5" font-weight="700" fill="#0f172a">VXLAN packet — example</text>
+  <text x="840" y="402" font-size="12.5" fill="#475569">outer: 172.18.0.y → .z · UDP 8472</text>
+  <text x="840" y="422" font-size="12.5" fill="#475569">inner: 10.244.1.x → 10.244.2.x</text>
+
+  <!-- LEGEND -->
+  <g font-size="11.5" fill="#475569">
+    <circle cx="70" cy="490" r="11" fill="#10b981"/><text x="70" y="494" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text><text x="89" y="494">pod to agent</text>
+    <circle cx="220" cy="490" r="11" fill="#0284c7"/><text x="220" y="494" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text><text x="239" y="494">VXLAN between nodes · UDP 8472</text>
+    <circle cx="470" cy="490" r="11" fill="#10b981"/><text x="470" y="494" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text><text x="489" y="494">agent to pod</text>
+    <rect x="610" y="482" width="18" height="16" rx="4" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4" stroke-dasharray="5 4"/><text x="634" y="494">changed in a later stage</text>
+    <text x="1220" y="494" fill="#64748b" text-anchor="end">pods 10.244.0.0/16 · services 10.96.0.0/12 · VXLAN +50 B header</text>
+  </g>
+</svg>

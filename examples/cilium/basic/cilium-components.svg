@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 968"
+     font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="cc-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5"
+            orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+    </marker>
+    <linearGradient id="cc-hero" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5f3ff"/>
+      <stop offset="1" stop-color="#ede9fe"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="968" fill="#ffffff"/>
+
+  <text x="640" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Cilium &amp; Kubernetes — Components</text>
+  <text x="640" y="64" text-anchor="middle" font-size="14" fill="#475569">CLI &amp; UI outside the cluster · control plane on each node · eBPF data path in the kernel</text>
+
+  <!-- TIER 1 · OUTSIDE THE CLUSTER (blue) -->
+  <rect x="40" y="78" width="1200" height="104" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="98" font-size="12" font-weight="700" letter-spacing="2" fill="#0284c7">OUTSIDE THE CLUSTER · CLI &amp; UI</text>
+
+  <rect x="60" y="108" width="373" height="58" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="80" y="132" font-size="14.5" font-weight="700" fill="#0c4a6e">cilium CLI <tspan fill="#0284c7" font-size="11.5">· kubeconfig</tspan></text>
+  <text x="80" y="154" font-size="12.5" fill="#475569">cilium install · cilium status · cilium hubble</text>
+
+  <rect x="453" y="108" width="373" height="58" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="473" y="132" font-size="14.5" font-weight="700" fill="#0c4a6e">hubble CLI</text>
+  <text x="473" y="154" font-size="12.5" fill="#475569">hubble observe · hubble flow · gRPC</text>
+
+  <rect x="846" y="108" width="374" height="58" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="866" y="132" font-size="14.5" font-weight="700" fill="#0c4a6e">Hubble UI <tspan fill="#0284c7" font-size="11.5">· web app</tspan></text>
+  <text x="866" y="154" font-size="12.5" fill="#475569">service dependency map · connectivity map</text>
+
+  <!-- TIER 2 · KUBERNETES (indigo) -->
+  <rect x="40" y="198" width="1200" height="140" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="218" font-size="12" font-weight="700" letter-spacing="2" fill="#6366f1">KUBERNETES</text>
+
+  <rect x="60" y="228" width="500" height="96" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.6"/>
+  <text x="80" y="252" font-size="14.5" font-weight="700" fill="#3730a3">API server <tspan fill="#6366f1" font-size="11.5">· :6443</tspan></text>
+  <text x="80" y="276" font-size="12.5" fill="#475569">Pods · Services · NetworkPolicy · CRDs</text>
+  <text x="80" y="298" font-size="12.5" fill="#475569">state store · Cilium CRDs (default) · kvstore (optional)</text>
+
+  <rect x="580" y="228" width="600" height="96" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.6"/>
+  <text x="600" y="252" font-size="14.5" font-weight="700" fill="#3730a3">kubelet <tspan fill="#6366f1" font-size="11.5">· one per node</tspan></text>
+  <text x="600" y="276" font-size="12.5" fill="#475569">invokes the CNI plugin at pod start / stop</text>
+  <text x="600" y="298" font-size="12.5" fill="#475569">runs the agent DaemonSet · runs the operator Deployment</text>
+
+  <!-- TIER 3 · CILIUM CONTROL PLANE (violet) -->
+  <rect x="40" y="354" width="1200" height="356" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="374" font-size="12" font-weight="700" letter-spacing="2" fill="#8b5cf6">CILIUM CONTROL PLANE</text>
+
+  <!-- cilium-agent · hero -->
+  <rect x="60" y="384" width="560" height="140" rx="12" fill="url(#cc-hero)" stroke="#8b5cf6" stroke-opacity="0.8" stroke-width="1.5"/>
+  <text x="82" y="408" font-size="16" font-weight="700" fill="#4c1d95">cilium-agent <tspan fill="#8b5cf6" font-size="11.5">· DaemonSet · one per node · REST :9897</tspan></text>
+  <line x1="82" y1="420" x2="598" y2="420" stroke="#8b5cf6" stroke-opacity="0.35"/>
+  <text x="82" y="444" font-size="12.5" fill="#6d28d9">userspace control plane · programs eBPF in the kernel</text>
+  <text x="82" y="466" font-size="12.5" fill="#6d28d9">enforces L3/L4/L7 policy by pod identity · replaces kube-proxy</text>
+  <text x="82" y="488" font-size="12.5" fill="#475569">embedded: Hubble server (gRPC :4244) · cilium-dbg tool</text>
+  <text x="82" y="510" font-size="12.5" fill="#475569">pod &amp; service events · BGP control plane · IPAM client</text>
+
+  <!-- cilium-operator -->
+  <rect x="655" y="384" width="265" height="140" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.6"/>
+  <text x="675" y="408" font-size="14" font-weight="700" fill="#4c1d95">cilium-operator</text>
+  <text x="675" y="428" font-size="11.5" fill="#8b5cf6">Deployment · HA via leader election</text>
+  <text x="675" y="452" font-size="12" fill="#475569">cluster-wide duties, once —</text>
+  <text x="675" y="472" font-size="12" fill="#475569">IPAM CIDR assignment · BGP</text>
+  <text x="675" y="492" font-size="12" fill="#475569">garbage collection</text>
+  <text x="675" y="512" font-size="12" fill="#475569">not in the forwarding path</text>
+
+  <!-- hubble-relay -->
+  <rect x="955" y="384" width="265" height="140" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.6"/>
+  <g transform="translate(975,392)">
+    <polyline points="0,8 5,8 8,1 11,15 14,8 18,8" fill="none" stroke="#8b5cf6" stroke-opacity="0.7" stroke-width="2"/>
+  </g>
+  <text x="1001" y="408" font-size="14" font-weight="700" fill="#4c1d95">hubble-relay <tspan fill="#8b5cf6" font-size="11.5">· :4245</tspan></text>
+  <text x="1001" y="428" font-size="11.5" fill="#8b5cf6">standalone Deployment</text>
+  <text x="1001" y="452" font-size="12" fill="#475569">one cluster-wide gRPC API</text>
+  <text x="1001" y="472" font-size="12" fill="#475569">aggregates the Hubble server</text>
+  <text x="1001" y="492" font-size="12" fill="#475569">of every node</text>
+  <text x="1001" y="512" font-size="12" fill="#475569">port-forward for CLI &amp; UI</text>
+
+  <!-- kube-proxy (optional, dashed) -->
+  <rect x="60" y="594" width="373" height="100" rx="10" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+  <text x="80" y="618" font-size="14" font-weight="700" fill="#6d28d9">kube-proxy <tspan fill="#8b5cf6" font-size="11.5">· optional</tspan></text>
+  <text x="80" y="642" font-size="12" fill="#475569">service load balancing</text>
+  <text x="80" y="664" font-size="12" fill="#475569">replaced by the agent (KPR)</text>
+
+  <!-- cilium-cni -->
+  <rect x="453" y="594" width="373" height="100" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.6"/>
+  <text x="473" y="618" font-size="14" font-weight="700" fill="#4c1d95">cilium-cni <tspan fill="#8b5cf6" font-size="11.5">· CNI plugin</tspan></text>
+  <text x="473" y="642" font-size="12" fill="#475569">invoked by the kubelet at pod start / stop</text>
+  <text x="473" y="664" font-size="12" fill="#475569">sets up pod networking via the local agent</text>
+
+  <!-- cilium-dbg (in-agent, dashed) -->
+  <rect x="846" y="594" width="374" height="100" rx="10" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+  <text x="866" y="618" font-size="14" font-weight="700" fill="#6d28d9">cilium-dbg <tspan fill="#8b5cf6" font-size="11.5">· in-agent tool</tspan></text>
+  <text x="866" y="642" font-size="12" fill="#475569">ships inside the agent container</text>
+  <text x="866" y="664" font-size="12" fill="#475569">reads agent state &amp; eBPF maps · local REST API</text>
+
+  <!-- TIER 4 · NODE / DATA PATH (green) -->
+  <rect x="40" y="726" width="1200" height="156" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="746" font-size="12" font-weight="700" letter-spacing="2" fill="#10b981">NODE · DATA PATH</text>
+
+  <rect x="60" y="752" width="560" height="114" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.6"/>
+  <g transform="translate(80,764)">
+    <path d="M 11 0 L 0 10 L 6 10 L 2 16 L 14 6 L 8 6 Z" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+  </g>
+  <text x="106" y="776" font-size="14.5" font-weight="700" fill="#065f46">eBPF programs in the Linux kernel <tspan fill="#10b981" font-size="11.5">· data path</tspan></text>
+  <text x="106" y="800" font-size="12.5" fill="#047857">packet processing at L3/L4/L7 · service load balancing</text>
+  <text x="106" y="822" font-size="12.5" fill="#047857">VXLAN tunnel or native routing · BPF masquerade</text>
+  <text x="106" y="844" font-size="12.5" fill="#475569">endpoint identity from labels · policy in the kernel</text>
+
+  <rect x="640" y="752" width="580" height="114" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.6"/>
+  <g transform="translate(660,764)">
+    <rect x="0" y="10" width="4" height="6" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+    <rect x="6" y="6" width="4" height="10" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+    <rect x="12" y="2" width="4" height="14" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+  </g>
+  <text x="686" y="776" font-size="14.5" font-weight="700" fill="#065f46">Pods &amp; Services</text>
+  <text x="686" y="800" font-size="12.5" fill="#047857">workload endpoints on the node · cluster Services</text>
+  <text x="686" y="822" font-size="12.5" fill="#475569">reachability through the eBPF data path</text>
+  <text x="686" y="844" font-size="12.5" fill="#475569">L7 policy by identity: labels, not addresses</text>
+
+  <!-- ARROWS (drawn last) -->
+
+  <!-- 1 · cilium CLI -> API server -->
+  <line x1="233" y1="168" x2="233" y2="222" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="233" cy="195" r="11" fill="#0284c7"/>
+  <text x="233" y="199" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+  <text x="247" y="199" font-size="11.5" fill="#475569">kubeconfig · :6443</text>
+
+  <!-- 2 · hubble CLI -> hubble-relay (elbow through the tier corridor) -->
+  <path d="M 570 168 L 570 348 L 1080 348 L 1080 378" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="825" cy="348" r="11" fill="#10b981"/>
+  <text x="825" y="352" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+  <text x="805" y="338" text-anchor="end" font-size="11.5" fill="#475569">gRPC · :4245</text>
+
+  <!-- 3 · Hubble UI -> hubble-relay (right corridor x=1200) -->
+  <line x1="1200" y1="168" x2="1200" y2="378" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="1200" cy="272" r="11" fill="#d97706"/>
+  <text x="1200" y="276" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+  <text x="1186" y="352" text-anchor="end" font-size="11.5" fill="#475569">port forward</text>
+
+  <!-- 4 · API server -> cilium-agent (x=340, beyond the tier label end + 8) -->
+  <line x1="340" y1="328" x2="340" y2="378" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="340" cy="353" r="11" fill="#6366f1"/>
+  <text x="340" y="357" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text>
+  <text x="326" y="352" text-anchor="end" font-size="11.5" fill="#475569">watches pods · services · policies</text>
+
+  <!-- 5 · kubelet -> cilium-cni (corridor x=637, down through the row lane) -->
+  <line x1="637" y1="328" x2="637" y2="590" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="637" cy="459" r="11" fill="#0891b2"/>
+  <text x="637" y="463" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">5</text>
+
+  <!-- 6 · cilium-cni -> cilium-agent (short tick in the row lane) -->
+  <line x1="560" y1="590" x2="560" y2="528" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="560" cy="559" r="11" fill="#8b5cf6"/>
+  <text x="560" y="563" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">6</text>
+
+  <!-- 7 · cilium-agent -> eBPF data path (corridor x=443) -->
+  <line x1="443" y1="528" x2="443" y2="748" stroke="#475569" stroke-width="2" marker-end="url(#cc-arrow)"/>
+  <circle cx="443" cy="638" r="11" fill="#0d9488"/>
+  <text x="443" y="642" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">7</text>
+
+  <!-- LEGEND (badge bottom 947, 21 px above the canvas bottom) -->
+  <g font-size="11.5" fill="#475569">
+    <circle cx="70" cy="936" r="11" fill="#0284c7"/><text x="70" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text><text x="89" y="940">cilium CLI → API</text>
+    <circle cx="215" cy="936" r="11" fill="#10b981"/><text x="215" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text><text x="234" y="940">hubble CLI → relay</text>
+    <circle cx="370" cy="936" r="11" fill="#d97706"/><text x="370" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text><text x="389" y="940">Hubble UI → relay</text>
+    <circle cx="515" cy="936" r="11" fill="#6366f1"/><text x="515" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text><text x="534" y="940">API → agent</text>
+    <circle cx="630" cy="936" r="11" fill="#0891b2"/><text x="630" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">5</text><text x="649" y="940">kubelet → CNI</text>
+    <circle cx="760" cy="936" r="11" fill="#8b5cf6"/><text x="760" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">6</text><text x="779" y="940">CNI → agent</text>
+    <circle cx="880" cy="936" r="11" fill="#0d9488"/><text x="880" y="940" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">7</text><text x="899" y="940">agent → kernel</text>
+    <rect x="1010" y="928" width="18" height="16" rx="4" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/><text x="1036" y="940">dashed = optional / in-agent</text>
+  </g>
+</svg>
