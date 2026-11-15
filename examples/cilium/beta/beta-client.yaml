@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: beta-client
+  namespace: demo
+  labels: 
+    app: beta-curl
+spec:
+  containers: 
+    - name: curl
+      image: "curlimages/curl:8.23.0"
+      command: ["sleep", "infinity"]

@@ -3,11 +3,6 @@ title: Kind & Cilium (VXLAN tunnel)
 date: 2026/11/14
 ---
 
-
-
-
-
-
 # Deployment
 
 Smallest useful Cilium Kind cluster.
@@ -361,41 +356,6 @@ kubectl -n kube-system logs $agent_pod
   - Kubelet executes the binary once with the pod's network config
   - Plugin talks to the agent on the same node (local API/socket) to set up the datapath
 
-### Hubble
-
-Hubble[^O3sx5] — Distributed networking and security observability platform
-
-[^O3sx5]: Hubble Documentation  
-<https://docs.cilium.io/en/stable/observability/hubble>
-
-* What it does...
-  - Shows service dependencies and a communication map
-  - Helps in network monitoring & alerting
-  - Enables security observability for network connections
-  - Application monitoring
-* How it works...
-  - `cilium-agent` records flows through its eBPF programs
-  - `hubble-relay` collects the flows of all nodes
-  - `hubble` CLI and the Hubble UI read the flows from the relay
-
-Open a port forward to Hubble Relay...
-
-```bash
-# ...keep it open in a second terminal
-cilium hubble port-forward
-
-# Open the Web UI in a browser
-cilium hubble ui
-```
-
-Show flows...
-
-```bash
-hubble observe -n $namespace --last 20
-# only dropped
-hubble observe -n $namespace --verdict DROPPED
-```
-
 ## Terminology
 
 ### Endpoint
@@ -445,35 +405,6 @@ Cilium implements Kubernetes services directly in eBPF (replaces `kube-proxy`[^e
 # Frontends and their backends per node
 kubectl -n kube-system exec ds/cilium -- cilium-dbg service list
 ```
-
-### Policies
-
-Cilium enforces network policy[^I4Df3] via eBPF, using **identity-based** rules
-
-[^I4Df3]: Overview of Network Policy, Cilium Documentation  
-<https://docs.cilium.io/en/stable/security/policy>
-
-* Pods get a numeric identity from labels ..policies match identities instead of IPs.
-* Policy resources
-  - `NetworkPolicy` — standard Kubernetes, L3/4 ingress/egress only
-  - `CiliumNetworkPolicy` — extended CRD: L7 (HTTP, gRPC), FQDN egress, CIDR rules
-  - `CiliumClusterwideNetworkPolicy` — same as above, cluster-scoped (no namespace)
-  - Cilium implements a subset of `NetworkPolicy` spec; unsupported fields are dropped
-
-Cilium runs Envoy[^w3Ed1] as the **L7 proxy** (HTTP/gRPC policy enforcement)
-
-[^w3Ed1]: Envoy Project  
-<https://www.envoyproxy.io>
-
-* Division of labor
-  - eBPF programs handle L3/L4 fast in the kernel (routing, load balancing, L3/4 policy)
-  - Traffic that needs L7 inspection is redirected out of the kernel to the local Envoy process
-  - Envoy parses HTTP/gRPC and applies `CiliumNetworkPolicy` L7 rules
-  - Approved packets are forwarded on; denied ones are dropped with a Hubble trace
-* Why both?
-  - eBPF is fast but cannot fully decode HTTP in-kernel for every case
-  - Envoy gives protocol understanding, at the cost of a userspace hop
-  - Only pods with L7 policies involve Envoy; pure L3/4 traffic never touches it
 
 ## Configuration
 

@@ -1,0 +1,9 @@
+[tools]
+kubectl = "latest"
+kind = "latest"
+helm = "latest"
+cilium-cli = "latest"
+jq = "latest"
+"github:srl-labs/containerlab" = "latest"
+"github:cilium/hubble" = "latest"
+envsubst = "latest"

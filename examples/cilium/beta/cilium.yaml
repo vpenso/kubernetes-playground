@@ -1,0 +1,7 @@
+hubble:
+  relay: {enabled: true}
+  ui: {enabled: true}
+# Needs WireGuard in the host kernel (5.6+). Remove this block if it fails.
+encryption:
+  enabled: true
+  type: wireguard

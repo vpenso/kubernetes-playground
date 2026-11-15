@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Namespace
+metadata: 
+  name: demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: beta
+  namespace: demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: beta-nginx
+  template:
+    metadata:
+      labels:
+        app: beta-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: "nginx:1.31-alpine"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: beta-nginx
+  namespace: demo
+spec:
+  selector:
+    app: beta-nginx
+  ports: 
+    - port: 80
+
