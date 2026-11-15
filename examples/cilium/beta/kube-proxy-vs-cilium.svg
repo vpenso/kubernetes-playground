@@ -1,0 +1,138 @@
+<svg viewBox="0 0 1160 560" xmlns="http://www.w3.org/2000/svg"
+     font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="cilium-hero" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5f3ff"/>
+      <stop offset="1" stop-color="#ede9fe"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-violet" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#8b5cf6"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="560" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="580" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">kube-proxy vs Cilium — Service Load Balancing</text>
+  <text x="580" y="64" text-anchor="middle" font-size="14" fill="#475569">How a Service ClusterIP reaches a pod · two modes side by side</text>
+
+  <!-- ================= LEFT TIER : KUBE-PROXY ================= -->
+  <rect x="20" y="90" width="540" height="350" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="40" y="114" font-size="12" font-weight="700" letter-spacing="2" fill="#6366f1">KUBE-PROXY MODE · IPTABLES</text>
+
+  <!-- Client pod -->
+  <rect x="40" y="140" width="150" height="56" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="60" y="164" font-size="14.5" font-weight="700" fill="#0c4a6e">Client pod</text>
+  <text x="60" y="186" font-size="12.5" fill="#475569">calls the Service</text>
+
+  <!-- Service -->
+  <rect x="330" y="140" width="210" height="56" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="350" y="164" font-size="14.5" font-weight="700" fill="#0c4a6e">Service <tspan fill="#0284c7" font-size="11.5">· ClusterIP</tspan></text>
+  <text x="350" y="186" font-size="12.5" fill="#475569">virtual IP · port 80</text>
+
+  <!-- kube-proxy -->
+  <rect x="270" y="256" width="250" height="68" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.6"/>
+  <text x="290" y="280" font-size="14.5" font-weight="700" fill="#3730a3">kube-proxy <tspan fill="#6366f1" font-size="11.5">· iptables</tspan></text>
+  <text x="290" y="302" font-size="12.5" fill="#475569">DNAT on every packet · per node</text>
+
+  <!-- Backend pods -->
+  <rect x="40" y="380" width="230" height="48" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+  <text x="60" y="408" font-size="14" font-weight="700" fill="#065f46">Pod 1 <tspan fill="#10b981" font-size="11.5">· 10.244.1.237:80</tspan></text>
+  <rect x="310" y="380" width="230" height="48" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+  <text x="330" y="408" font-size="14" font-weight="700" fill="#065f46">Pod 2 <tspan fill="#10b981" font-size="11.5">· 10.244.2.136:80</tspan></text>
+
+  <!-- Left flow: 1 connect -->
+  <line x1="194" y1="168" x2="324" y2="168" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="259" cy="168" r="11" fill="#0284c7"/>
+  <text x="259" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+
+  <!-- Left flow: 2 DNAT -->
+  <line x1="435" y1="200" x2="435" y2="250" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="435" cy="225" r="11" fill="#6366f1"/>
+  <text x="435" y="229" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+  <text x="449" y="229" font-size="11.5" fill="#475569">iptables DNAT</text>
+
+  <!-- Left flow: 3 to pods -->
+  <path d="M 330 328 L 330 352 L 155 352 L 155 374" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="470" y1="328" x2="470" y2="374" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="242" cy="352" r="11" fill="#10b981"/>
+  <text x="242" y="356" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+  <text x="222" y="342" text-anchor="end" font-size="11.5" fill="#475569">DNAT · to pod :80</text>
+
+  <!-- ================= RIGHT TIER : CILIUM ================= -->
+  <rect x="600" y="90" width="540" height="350" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="620" y="114" font-size="12" font-weight="700" letter-spacing="2" fill="#8b5cf6">CILIUM · KUBE-PROXY REPLACEMENT</text>
+
+  <!-- Client pod -->
+  <rect x="620" y="140" width="140" height="56" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="640" y="164" font-size="14.5" font-weight="700" fill="#0c4a6e">Client pod</text>
+  <text x="640" y="186" font-size="12.5" fill="#475569">no app changes</text>
+
+  <!-- Service -->
+  <rect x="890" y="140" width="210" height="56" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="910" y="164" font-size="14.5" font-weight="700" fill="#0c4a6e">Service <tspan fill="#0284c7" font-size="11.5">· ClusterIP</tspan></text>
+  <text x="910" y="186" font-size="12.5" fill="#475569">no packets sent here</text>
+
+  <!-- cilium-agent (hero) -->
+  <rect x="830" y="256" width="250" height="68" rx="12" fill="url(#cilium-hero)" stroke="#8b5cf6" stroke-opacity="0.8" stroke-width="1.5"/>
+  <text x="850" y="280" font-size="16" font-weight="700" fill="#4c1d95">cilium-agent <tspan fill="#8b5cf6" font-size="11.5">· eBPF</tspan></text>
+  <line x1="850" y1="290" x2="1060" y2="290" stroke="#8b5cf6" stroke-opacity="0.35"/>
+  <text x="850" y="310" font-size="12.5" fill="#6d28d9">hooks connect() · picks a pod</text>
+
+  <!-- EP-LB fallback (dashed) -->
+  <rect x="620" y="256" width="180" height="68" rx="10" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+  <text x="640" y="280" font-size="14" font-weight="700" fill="#6d28d9">EP-LB fallback</text>
+  <text x="640" y="302" font-size="12.5" fill="#475569">DNAT at pod interface</text>
+  <line x1="804" y1="290" x2="824" y2="290" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-violet)"/>
+
+  <!-- Backend pods -->
+  <rect x="620" y="380" width="230" height="48" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+  <text x="640" y="408" font-size="14" font-weight="700" fill="#065f46">Pod 1 <tspan fill="#10b981" font-size="11.5">· 10.244.1.237:80</tspan></text>
+  <rect x="870" y="380" width="230" height="48" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+  <text x="890" y="408" font-size="14" font-weight="700" fill="#065f46">Pod 2 <tspan fill="#10b981" font-size="11.5">· 10.244.2.136:80</tspan></text>
+
+  <!-- Right flow: 1 connect -->
+  <line x1="764" y1="168" x2="884" y2="168" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="824" cy="168" r="11" fill="#0284c7"/>
+  <text x="824" y="172" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+
+  <!-- Right flow: 2 socket-LB -->
+  <line x1="995" y1="200" x2="995" y2="250" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="995" cy="225" r="11" fill="#8b5cf6"/>
+  <text x="995" y="229" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+  <text x="1009" y="229" font-size="11.5" fill="#6d28d9">Socket-LB rewrite</text>
+
+  <!-- Right flow: 3 to pods -->
+  <path d="M 870 328 L 870 352 L 735 352 L 735 374" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="985" y1="328" x2="985" y2="374" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <circle cx="802" cy="352" r="11" fill="#10b981"/>
+  <text x="802" y="356" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+  <text x="782" y="342" text-anchor="end" font-size="11.5" fill="#475569">direct to pod :80</text>
+
+  <!-- ================= LEGEND ================= -->
+  <g font-size="11.5" fill="#475569">
+    <circle cx="40" cy="529" r="11" fill="#0284c7"/>
+    <text x="40" y="533" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+    <text x="59" y="533">connect to ClusterIP</text>
+
+    <circle cx="200" cy="529" r="11" fill="#6366f1"/>
+    <text x="200" y="533" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+    <text x="219" y="533">iptables DNAT · every packet</text>
+
+    <circle cx="406" cy="529" r="11" fill="#8b5cf6"/>
+    <text x="406" y="533" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+    <text x="425" y="533">Socket-LB rewrites connect()</text>
+
+    <circle cx="606" cy="529" r="11" fill="#10b981"/>
+    <text x="606" y="533" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+    <text x="625" y="533">delivery to picked pod</text>
+
+    <rect x="775" y="521" width="18" height="16" rx="4" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+    <text x="800" y="533">EP-LB fallback</text>
+
+    <text x="1120" y="533" fill="#64748b" text-anchor="end">no kube-proxy pod · no ClusterIP packets</text>
+  </g>
+</svg>

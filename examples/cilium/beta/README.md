@@ -1,6 +1,7 @@
 ---
 title: Network Services & Policy (Wireguard)
 date: 2026/11/14
+date-modified: 2026/11/15
 ---
 
 # Deployment
@@ -73,6 +74,8 @@ KubeProxyReplacement Details:
 
 ## Cilium Service
 
+![](kube-proxy-vs-cilium.svg)
+
 Kubernetes defaults to make service IPs reachable using `kube-proxy`[^9eW2q]
 
 [^9eW2q]: Virtual IPs and Service Proxies, Kubernetes Documentation  
@@ -102,6 +105,8 @@ Stage 2 — Load balance at the network layer, when packets flow
   - ...DNAT on each packet that needs it. Picks a pod from a BPF map.
 
 ## WireGuard
+
+![](cilium-wireguard.svg)
 
 **Cilium encrypts pod-to-pod traffic[^L2D12] between nodes using WireGuard[^8uYtr]**
 
