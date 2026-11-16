@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Diagram Style Guide</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 24px 64px;
+    font-family: ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #334155; background: #ffffff; line-height: 1.45;
+    max-width: 1100px; margin-left: auto; margin-right: auto;
+  }
+  h1 { font-size: 24px; margin: 0 0 4px; color: #0f172a; }
+  h2 { font-size: 18px; margin: 40px 0 8px; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+  h3 { font-size: 14.5px; margin: 22px 0 6px; color: #0f172a; }
+  p { margin: 6px 0; max-width: 75ch; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  .subtitle { color: #64748b; font-size: 14px; margin: 0 0 8px; }
+  .purpose { font-size: 13px; color: #64748b; background: #f8fafc;
+    border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;
+    max-width: 80ch; margin: 16px 0; }
+  .ver { display: inline-block; font-size: 11px; font-weight: 700; color: #4338ca;
+    background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 999px;
+    padding: 1px 10px; margin-left: 10px; vertical-align: 4px; letter-spacing: 0.5px; }
+  .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 32px;
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 12px 16px; margin: 16px 0; max-width: 80ch; font-size: 13px; }
+  .toc a { display: block; color: #334155; text-decoration: none; padding: 3px 0;
+    border-bottom: 1px solid #eef2f7; }
+  .toc a:hover { color: #4338ca; }
+  .toc a .n { color: #4338ca; font-weight: 700; margin-right: 8px; }
+  .card { display: flex; gap: 20px; flex-wrap: wrap; margin: 10px 0 20px; }
+  .card .demo { flex: 0 1 440px; min-width: 280px; }
+  .card .demo svg { width: 100%; height: auto; display: block;
+    border: 1px solid #e2e8f0; background: #fff; }
+  .card pre { flex: 1 1 400px; min-width: 300px; }
+  pre {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+    padding: 10px 12px; margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px; line-height: 1.45; overflow-x: auto; color: #334155;
+  }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92em; background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 3px; padding: 0 4px; }
+  pre code { border: 0; background: none; padding: 0; }
+  table { border-collapse: collapse; margin: 8px 0 16px; font-size: 13px; }
+  th, td { text-align: left; padding: 5px 10px; border-bottom: 1px solid #e2e8f0; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #0f172a; }
+  td .hex, .hex { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; }
+  .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.15); vertical-align: -2px; margin-right: 5px; }
+  .rule { font-size: 13px; color: #334155; border-left: 3px solid #8b5cf6;
+    padding: 2px 0 2px 10px; margin: 8px 0; max-width: 80ch; }
+  .caption { font-size: 12px; color: #64748b; margin: 4px 0 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>SVG Diagram Style Guide<span class="ver">v1.0</span></h1>
+  <p class="subtitle">Design blueprint for layered architecture diagrams in SVG.</p>
+  <p class="purpose"><strong>Usage:</strong> this page is the spec that AI agents read when
+  generating or editing SVG diagrams. Treat the tables, rule lines, and code
+  blocks as the source of truth; every code block is the exact markup of the
+  demo beside it (ids, coordinates and colors included); the demo canvas's
+  white background rect and context-only elements are implicit from §1.
+  Rendered demos are the human reference for reviewing changes
+  with an agent. When the spec and a demo disagree, the spec wins — and the
+  demo must be fixed to match.</p>
+  <nav class="toc">
+    <a href="#canvas"><span class="n">1</span>Canvas &amp; Background</a>
+    <a href="#palette"><span class="n">2</span>Color Palette</a>
+    <a href="#typography"><span class="n">3</span>Typography &amp; Text Roles</a>
+    <a href="#shapes"><span class="n">4</span>Shapes &amp; Containers</a>
+    <a href="#connections"><span class="n">5</span>Connections &amp; Arrows</a>
+    <a href="#legend"><span class="n">6</span>Legend &amp; Annotations</a>
+    <a href="#layout"><span class="n">7</span>Layout Rules</a>
+    <a href="#adapt"><span class="n">8</span>Adapting the System</a>
+    <a href="#template"><span class="n">9</span>Starter Template</a>
+    <a href="#examples"><span class="n">10</span>Examples &amp; Common Mistakes</a>
+  </nav>
+</header>
+
+<!-- ============================================================ -->
+<h2 id="canvas">1. Canvas &amp; Background</h2>
+
+<ul>
+  <li><code>viewBox</code> = final pixel size; shared font stack on the <code>&lt;svg&gt;</code> root.</li>
+  <li>Background: solid <code>#ffffff</code> covering the full canvas.</li>
+  <li>Title: 26 px / 700 / <code>#0f172a</code>, centered, y = 40. Subtitle: 14 px / <code>#475569</code>, y = 64.</li>
+</ul>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect x="0" y="0" width="520" height="150" fill="#ffffff"/>
+      <text x="260" y="60" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Diagram Title — Here</text>
+      <text x="260" y="90" text-anchor="middle" font-size="14" fill="#475569">Short context line · separator dots · one sentence</text>
+    </svg>
+    <p class="caption">Demo cropped — full-canvas positions are y = 40 / 64.</p>
+  </div>
+  <div>
+<pre><code>&lt;svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg"
+     font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto,
+                 Helvetica, Arial, sans-serif"&gt;
+  &lt;rect x="0" y="0" width="520" height="150" fill="#ffffff"/&gt;
+  &lt;!-- full-canvas positions: title y = 40, subtitle y = 64 --&gt;
+  &lt;text x="260" y="60" text-anchor="middle" font-size="26"
+        font-weight="700" fill="#0f172a"&gt;Diagram Title — Here&lt;/text&gt;
+  &lt;text x="260" y="90" text-anchor="middle" font-size="14"
+        fill="#475569"&gt;Short context line · separator dots · one sentence&lt;/text&gt;
+&lt;/svg&gt;</code></pre>
+  </div>
+</div>
+
+<table>
+  <tr><th>Property</th><th>Value</th><th>Notes</th></tr>
+  <tr><td>Root font stack</td><td class="hex">ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif</td><td>Set once on <code>&lt;svg&gt;</code>, inherited by all text</td></tr>
+  <tr><td>Background</td><td class="hex">#ffffff (solid white)</td><td>Covers the full canvas; no gradients</td></tr>
+  <tr><td>Title</td><td class="hex">26 px, weight 700, #0f172a, y = 40</td><td>Centered, em dash between words</td></tr>
+  <tr><td>Subtitle</td><td class="hex">14 px, #475569, y = 64</td><td>Centered; “·” as separator</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="palette">2. Color Palette</h2>
+
+<p>Tailwind-derived. One accent hue per tier; five shades per hue:</p>
+<ul>
+  <li><strong>Accent</strong> — strokes, tier labels, markers (e.g. <code>#8b5cf6</code>)</li>
+  <li><strong>Light fill</strong> — box fill (e.g. <code>#f5f3ff</code>)</li>
+  <li><strong>Dark text</strong> — box titles (e.g. <code>#4c1d95</code>)</li>
+  <li><strong>Mid text</strong> — body lines (e.g. <code>#6d28d9</code>)</li>
+  <li><strong>Chip text</strong> — pill labels, one shade darker than mid (e.g. <code>#5b21b6</code>)</li>
+  <li><strong>Glyph fill</strong> — mini-glyph fills (§4.6, §4.7) one step darker than the box light fill, e.g. <code>#bfdbfe</code> blue · <code>#a7f3d0</code> green · <code>#ddd6fe</code> violet · <code>#99f6e4</code> teal · <code>#a5f3fc</code> cyan · <code>#fde68a</code> amber</li>
+</ul>
+
+<table>
+  <tr><th>Role</th><th>Accent</th><th>Light fill</th><th>Title text</th><th>Body text</th><th>Gradient (optional)</th></tr>
+  <tr><td>Blue (clients / inputs)</td>
+    <td class="hex"><span class="swatch" style="background:#0284c7"></span>#0284c7</td>
+    <td class="hex">#eff6ff</td>
+    <td class="hex"><span class="swatch" style="background:#0c4a6e"></span>#0c4a6e</td>
+    <td>—</td>
+    <td>—</td></tr>
+  <tr><td>Violet (control / core)</td>
+    <td class="hex"><span class="swatch" style="background:#8b5cf6"></span>#8b5cf6</td>
+    <td class="hex">#ede9fe / #f5f3ff</td>
+    <td class="hex"><span class="swatch" style="background:#4c1d95"></span>#4c1d95</td>
+    <td class="hex">#6d28d9</td>
+    <td class="hex">#f5f3ff → #ede9fe</td></tr>
+  <tr><td>Indigo (gateway / proxy)</td>
+    <td class="hex"><span class="swatch" style="background:#6366f1"></span>#6366f1</td>
+    <td class="hex">#eef2ff</td>
+    <td class="hex"><span class="swatch" style="background:#3730a3"></span>#3730a3</td>
+    <td>—</td>
+    <td>—</td></tr>
+  <tr><td>Amber (data / storage)</td>
+    <td class="hex"><span class="swatch" style="background:#d97706"></span>#d97706</td>
+    <td class="hex">#fffbeb / #fef3c7</td>
+    <td class="hex"><span class="swatch" style="background:#92400e"></span>#92400e</td>
+    <td class="hex">#b45309</td>
+    <td>—</td></tr>
+  <tr><td>Green (compute / workers)</td>
+    <td class="hex"><span class="swatch" style="background:#10b981"></span>#10b981</td>
+    <td class="hex">#ecfdf5 / #d1fae5</td>
+    <td class="hex"><span class="swatch" style="background:#065f46"></span>#065f46</td>
+    <td class="hex">#047857</td>
+    <td>—</td></tr>
+  <tr><td>Rose (security / auth)</td>
+    <td class="hex"><span class="swatch" style="background:#e11d48"></span>#e11d48</td>
+    <td class="hex">#fff1f2 → #ffe4e6 → #fff1f2</td>
+    <td class="hex"><span class="swatch" style="background:#be123c"></span>#be123c</td>
+    <td>—</td>
+    <td class="hex">vertical 3-stop</td></tr>
+</table>
+
+<h3>Neutral scale</h3>
+<table>
+  <tr><th>Use</th><th>Value</th></tr>
+  <tr><td>Page ink (titles)</td><td class="hex">#0f172a (slate-900)</td></tr>
+  <tr><td>Body text</td><td class="hex">#475569 (slate-600)</td></tr>
+  <tr><td>Muted text / footer</td><td class="hex">#64748b (slate-500)</td></tr>
+  <tr><td>Container fill</td><td class="hex">#f1f5f9 (slate-100)</td></tr>
+  <tr><td>Container stroke / hairlines</td><td class="hex">#e2e8f0 (slate-200)</td></tr>
+  <tr><td>Default box fill</td><td class="hex">#f8fafc (slate-50)</td></tr>
+  <tr><td>Default arrow / line stroke</td><td class="hex">#475569</td></tr>
+</table>
+
+<div class="rule"><strong>Stroke opacity:</strong> standard boxes 0.4–0.6 · hero boxes 0.7–0.8 with
+<code>stroke-width="1.5"</code> · side bars 0.5. Never full opacity on light boxes;
+full opacity is for arrows and markers only.</div>
+
+<!-- ============================================================ -->
+<h2 id="typography">3. Typography &amp; Text Roles</h2>
+
+<p>Nine roles. Titles 700, shape labels may use 600, everything else 400.
+Only tier labels are uppercase + letter-spaced. Escape <code>&amp;</code> as
+<code>&amp;amp;</code>; <code>·</code> is the list separator; version notes go in a smaller
+muted <code>&lt;tspan&gt;</code>.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="460" height="210" fill="#ffffff"/>
+      <text x="20" y="30" font-size="26" font-weight="700" fill="#0f172a">Title Role</text>
+      <text x="20" y="58" font-size="12" font-weight="700" letter-spacing="2" fill="#8b5cf6">TIER LABEL ROLE</text>
+      <text x="20" y="92" font-size="16" font-weight="700" fill="#4c1d95">Box Title<tspan fill="#8b5cf6" font-size="11.5"> · detail</tspan></text>
+      <text x="20" y="120" font-size="12.5" fill="#475569">Body line · secondary detail · medium slate</text>
+      <rect x="20" y="140" width="70" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/>
+      <text x="55" y="155" text-anchor="middle" font-size="11.5" fill="#5b21b6">pill</text>
+      <text x="20" y="196" font-size="11.5" fill="#475569">Arrow / legend label · 11.5 px</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;rect width="460" height="210" fill="#ffffff"/&gt;
+
+&lt;text x="20" y="30" font-size="26" font-weight="700"
+      fill="#0f172a"&gt;Title Role&lt;/text&gt;
+&lt;text x="20" y="58" font-size="12" font-weight="700"
+      letter-spacing="2" fill="#8b5cf6"&gt;TIER LABEL ROLE&lt;/text&gt;
+&lt;text x="20" y="92" font-size="16" font-weight="700"
+      fill="#4c1d95"&gt;Box Title&lt;tspan fill="#8b5cf6"
+      font-size="11.5"&gt; · detail&lt;/tspan&gt;&lt;/text&gt;
+&lt;text x="20" y="120" font-size="12.5" fill="#475569"&gt;
+      Body line · secondary detail · medium slate&lt;/text&gt;
+&lt;rect x="20" y="140" width="70" height="22" rx="11" fill="#ede9fe"
+      stroke="#8b5cf6" stroke-opacity="0.5"/&gt;
+&lt;text x="55" y="155" text-anchor="middle" font-size="11.5"
+      fill="#5b21b6"&gt;pill&lt;/text&gt;
+&lt;text x="20" y="196" font-size="11.5" fill="#475569"&gt;
+      Arrow / legend label · 11.5 px&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<table>
+  <tr><th>Role</th><th>Size</th><th>Weight</th><th>Fill</th><th>Notes</th></tr>
+  <tr><td>Page title</td><td>26</td><td>700</td><td class="hex">#0f172a</td><td>Centered, y = 40</td></tr>
+  <tr><td>Page subtitle</td><td>14</td><td>400</td><td class="hex">#475569</td><td>Centered, y = 64</td></tr>
+  <tr><td>Tier label</td><td>12</td><td>700</td><td class="hex">tier accent</td><td>Uppercase, <code>letter-spacing="2"</code>, top-left of container</td></tr>
+  <tr><td>Box title</td><td>13 – 16</td><td>700</td><td class="hex">tier dark text</td><td>Bigger box → bigger title (16 hero, 14–14.5 standard, 13 small)</td></tr>
+  <tr><td>Body line</td><td>11.5 – 12.5</td><td>400</td><td class="hex">#475569 or tier mid text</td><td>Line height 22 px; “·” separator</td></tr>
+  <tr><td>Chip / pill text</td><td>11 – 11.5</td><td>400–600</td><td class="hex">chip shade (e.g. #5b21b6)</td><td>Centered in the pill</td></tr>
+  <tr><td>Port / detail tspan</td><td>10.5 – 11.5</td><td>400</td><td class="hex">tier accent</td><td>Appended to box titles with “·”</td></tr>
+  <tr><td>Shape label (side bar)</td><td>13 – 13.5</td><td>600–700</td><td class="hex">tier dark / accent</td><td>Centered; side bar labels letter-spaced</td></tr>
+  <tr><td>Arrow / legend label</td><td>11.5</td><td>400</td><td class="hex">#475569</td><td>Next to the line it annotates</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2 id="shapes">4. Shapes &amp; Containers</h2>
+
+<h3>4.1 Tier container</h3>
+<p>Full-width rounded rect per layer. Fill <code>#f1f5f9</code>, stroke
+<code>#e2e8f0</code>, radius 14. Label 20 px below the top edge, 20 px from the left.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 110" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="460" height="110" fill="#ffffff"/>
+      <rect x="10" y="14" width="440" height="84" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+      <text x="30" y="34" font-size="12" font-weight="700" letter-spacing="2" fill="#0284c7">TIER LABEL · NOTE</text>
+      <rect x="30" y="44" width="190" height="34" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;rect x="10" y="14" width="440" height="84" rx="14"
+      fill="#f1f5f9" stroke="#e2e8f0"/&gt;
+&lt;text x="30" y="34" font-size="12" font-weight="700"
+      letter-spacing="2" fill="#0284c7"&gt;TIER LABEL · NOTE&lt;/text&gt;
+&lt;!-- first box: label + 10, 20 px from the tier edges --&gt;
+&lt;rect x="30" y="44" width="190" height="34" rx="10"
+      fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.2 Component box (standard)</h3>
+<p>Radius 10. Fill = tier light shade, stroke = tier accent at 0.4–0.6.
+Title 20 px inset, ~24 px below the top; body lines at 22 px line height;
+≥ 8 px from the last baseline to the box bottom.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 100" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="460" height="100" fill="#ffffff"/>
+      <rect x="20" y="18" width="420" height="64" rx="10" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.6"/>
+      <text x="40" y="44" font-size="14.5" font-weight="700" fill="#92400e">Component name <tspan fill="#d97706" font-size="11.5">· port 0000</tspan></text>
+      <text x="40" y="66" font-size="12.5" fill="#b45309">one line of detail · another detail</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;rect x="20" y="18" width="420" height="64" rx="10"
+      fill="#fffbeb" stroke="#d97706" stroke-opacity="0.6"/&gt;
+&lt;text x="40" y="44" font-size="14.5" font-weight="700"
+      fill="#92400e"&gt;Component name &lt;tspan fill="#d97706"
+      font-size="11.5"&gt;· port 0000&lt;/tspan&gt;&lt;/text&gt;
+&lt;text x="40" y="66" font-size="12.5" fill="#b45309"&gt;
+      one line of detail · another detail&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.3 Emphasized hero box</h3>
+<p>The central component. Radius 12, vertical gradient fill, accent stroke
+0.7–0.8 at width 1.5, hairline divider under the title.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 130" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <linearGradient id="demo-hero" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f5f3ff"/>
+          <stop offset="1" stop-color="#ede9fe"/>
+        </linearGradient>
+      </defs>
+      <rect width="460" height="130" fill="#ffffff"/>
+      <rect x="20" y="16" width="420" height="98" rx="12" fill="url(#demo-hero)" stroke="#8b5cf6" stroke-opacity="0.8" stroke-width="1.5"/>
+      <text x="42" y="44" font-size="16" font-weight="700" fill="#4c1d95">Hero component <tspan fill="#8b5cf6" font-size="11.5">· port 0000</tspan></text>
+      <line x1="42" y1="56" x2="418" y2="56" stroke="#8b5cf6" stroke-opacity="0.35"/>
+      <text x="42" y="80" font-size="12.5" fill="#6d28d9">capability one · capability two</text>
+      <text x="42" y="102" font-size="12.5" fill="#475569">secondary line in slate</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;defs&gt;
+  &lt;linearGradient id="demo-hero" x1="0" y1="0" x2="0" y2="1"&gt;
+    &lt;stop offset="0" stop-color="#f5f3ff"/&gt;
+    &lt;stop offset="1" stop-color="#ede9fe"/&gt;
+  &lt;/linearGradient&gt;
+&lt;/defs&gt;
+
+&lt;rect x="20" y="16" width="420" height="98" rx="12"
+      fill="url(#demo-hero)" stroke="#8b5cf6"
+      stroke-opacity="0.8" stroke-width="1.5"/&gt;
+&lt;text x="42" y="44" font-size="16" font-weight="700"
+      fill="#4c1d95"&gt;Hero component &lt;tspan fill="#8b5cf6"
+      font-size="11.5"&gt;· port 0000&lt;/tspan&gt;&lt;/text&gt;
+&lt;!-- hairline divider under the title --&gt;
+&lt;line x1="42" y1="56" x2="418" y2="56"
+      stroke="#8b5cf6" stroke-opacity="0.35"/&gt;
+&lt;text x="42" y="80" font-size="12.5" fill="#6d28d9"&gt;
+      capability one · capability two&lt;/text&gt;
+&lt;text x="42" y="102" font-size="12.5" fill="#475569"&gt;
+      secondary line in slate&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.4 Dashed variant (standby / optional / scaled-out)</h3>
+<p>Dashed stroke = “not always present” or “many instances”. Scaled-out
+placeholder: <code>fill="none"</code>, large faint <code>…</code>, explanation lines.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 110" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="460" height="110" fill="#ffffff"/>
+      <rect x="20" y="20" width="190" height="52" rx="10" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+      <text x="40" y="42" font-size="14" font-weight="700" fill="#6d28d9">Standby copy</text>
+      <text x="40" y="62" font-size="12" fill="#475569">secondary role</text>
+      <rect x="250" y="14" width="190" height="84" rx="12" fill="none" stroke="#10b981" stroke-opacity="0.45" stroke-dasharray="6 5"/>
+      <text x="345" y="52" text-anchor="middle" font-size="30" fill="#10b981" opacity="0.55">…</text>
+      <text x="345" y="78" text-anchor="middle" font-size="11.5" fill="#475569">many instances</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;!-- standby / optional: dashed accent stroke --&gt;
+&lt;rect x="20" y="20" width="190" height="52" rx="10"
+      fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5"
+      stroke-dasharray="5 4"/&gt;
+&lt;text x="40" y="42" font-size="14" font-weight="700"
+      fill="#6d28d9"&gt;Standby copy&lt;/text&gt;
+&lt;text x="40" y="62" font-size="12" fill="#475569"&gt;
+      secondary role&lt;/text&gt;
+
+&lt;!-- scaled-out placeholder --&gt;
+&lt;rect x="250" y="14" width="190" height="84" rx="12"
+      fill="none" stroke="#10b981" stroke-opacity="0.45"
+      stroke-dasharray="6 5"/&gt;
+&lt;text x="345" y="52" text-anchor="middle" font-size="30"
+      fill="#10b981" opacity="0.55"&gt;…&lt;/text&gt;
+&lt;text x="345" y="78" text-anchor="middle" font-size="11.5"
+      fill="#475569"&gt;many instances&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.5 Pill chips (plugin slots / tags)</h3>
+<p>Height 22, <code>rx = height/2</code>, light fill, solid accent stroke at 0.5.
+6 px gaps; width ≈ text + 2×10; text 11.5 px centered; end with “… more”.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 60" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="460" height="60" fill="#ffffff"/>
+      <rect x="20" y="18" width="46" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/>
+      <text x="43" y="33" text-anchor="middle" font-size="11.5" fill="#5b21b6">one</text>
+      <rect x="72" y="18" width="46" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/>
+      <text x="95" y="33" text-anchor="middle" font-size="11.5" fill="#5b21b6">two</text>
+      <rect x="124" y="18" width="60" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/>
+      <text x="154" y="33" text-anchor="middle" font-size="11.5" fill="#5b21b6">three</text>
+      <rect x="190" y="18" width="68" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/>
+      <text x="224" y="33" text-anchor="middle" font-size="11.5" fill="#5b21b6">… more</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;!-- rx = height/2 · width ≈ text width + 2×10 padding ·
+     next chip at previous x + width + 6 --&gt;
+&lt;rect x="20" y="18" width="46" height="22" rx="11"
+      fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/&gt;
+&lt;text x="43" y="33" text-anchor="middle" font-size="11.5"
+      fill="#5b21b6"&gt;one&lt;/text&gt;
+&lt;rect x="72" y="18" width="46" height="22" rx="11"
+      fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/&gt;
+&lt;text x="95" y="33" text-anchor="middle" font-size="11.5"
+      fill="#5b21b6"&gt;two&lt;/text&gt;
+&lt;rect x="124" y="18" width="60" height="22" rx="11"
+      fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/&gt;
+&lt;text x="154" y="33" text-anchor="middle" font-size="11.5"
+      fill="#5b21b6"&gt;three&lt;/text&gt;
+&lt;rect x="190" y="18" width="68" height="22" rx="11"
+      fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/&gt;
+&lt;text x="224" y="33" text-anchor="middle" font-size="11.5"
+      fill="#5b21b6"&gt;… more&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.6 Database box (mini glyph)</h3>
+<p>Standard box (§4.2) in tier shades. A mini cylinder glyph (18 × 16, body
+path + top ellipse one step darker) sits left of the title, bottom-aligned
+with the title baseline. No other cylinder geometry — the box stays a plain
+rounded rect. In glyph boxes, the title and all body lines share one x
+(box inset + 26) — see §4.7.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 240 90" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="240" height="90" fill="#ffffff"/>
+      <rect x="20" y="20" width="200" height="56" rx="10" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.6"/>
+      <path d="M 40 36 A 9 3 0 0 0 58 36 L 58 48 A 9 3 0 0 1 40 48 Z"
+            fill="#fef3c7" stroke="#d97706" stroke-opacity="0.7"/>
+      <ellipse cx="49" cy="36" rx="9" ry="3" fill="#fde68a" stroke="#d97706" stroke-opacity="0.7"/>
+      <text x="66" y="48" font-size="14" font-weight="700" fill="#92400e">etcd <tspan fill="#d97706" font-size="11.5">· :2379</tspan></text>
+      <text x="66" y="66" font-size="11.5" fill="#475569">Raft · strongly consistent</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;rect x="20" y="20" width="200" height="56" rx="10" fill="#fffbeb"
+      stroke="#d97706" stroke-opacity="0.6"/&gt;
+&lt;!-- mini glyph: 18×16, bottom-aligned with the title baseline --&gt;
+&lt;path d="M 40 36 A 9 3 0 0 0 58 36 L 58 48 A 9 3 0 0 1 40 48 Z"
+      fill="#fef3c7" stroke="#d97706" stroke-opacity="0.7"/&gt;
+&lt;ellipse cx="49" cy="36" rx="9" ry="3" fill="#fde68a"
+      stroke="#d97706" stroke-opacity="0.7"/&gt;
+&lt;text x="66" y="48" font-size="14" font-weight="700" fill="#92400e"&gt;
+  etcd &lt;tspan fill="#d97706" font-size="11.5"&gt;· :2379&lt;/tspan&gt;&lt;/text&gt;
+&lt;text x="66" y="66" font-size="11.5" fill="#475569"&gt;
+  Raft · strongly consistent&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.7 Service-type glyphs</h3>
+<p>Same system as the DB glyph (§4.6): an 18 × 16 icon left of the title,
+bottom edge on the title baseline, placed with
+<code>transform="translate(gx, baseline−16)"</code>. Rules:</p>
+<ul>
+  <li>The glyph sits at box left + 20 (the standard inset); the title and all body lines share one x = box left + 46.</li>
+  <li>Glyph takes the box's tier shades: fills one step darker than the box fill, stroke = tier accent at 0.7 opacity. Stroke-only glyphs use the accent at 0.7.</li>
+  <li>Max one glyph per box. No glyph = generic component. The database row is the §4.6 cylinder glyph, listed here for completeness. Its bottom arc may dip 3 px below the baseline.</li>
+</ul>
+
+<table>
+  <tr><th>Type</th><th>Glyph</th><th>Built from</th></tr>
+  <tr><td>Database</td><td>mini cylinder</td><td>1 path + 1 ellipse (§4.6)</td></tr>
+  <tr><td>API / service</td><td>signal bars</td><td>3 rects</td></tr>
+  <tr><td>Queue / broker</td><td>message stack</td><td>3 rounded bars</td></tr>
+  <tr><td>Cache</td><td>lightning bolt</td><td>1 six-point path</td></tr>
+  <tr><td>Worker / compute</td><td>2×2 dot grid</td><td>4 circles</td></tr>
+  <tr><td>Scheduler</td><td>clock</td><td>circle + 2 lines</td></tr>
+  <tr><td>Observability</td><td>pulse</td><td>1 polyline</td></tr>
+  <tr><td>Gateway / ingress</td><td>double chevron</td><td>2 polylines</td></tr>
+  <tr><td>Security / auth</td><td>shield</td><td>1 closed path</td></tr>
+</table>
+
+<div class="card">
+  <div class="demo" style="flex:1 1 100%;min-width:0">
+    <svg viewBox="0 0 1000 90" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <rect width="1000" height="90" fill="#ffffff"/>
+      <g transform="translate(91,16)">
+        <ellipse cx="9" cy="4" rx="9" ry="3" fill="#fde68a" stroke="#d97706" stroke-opacity="0.7"/>
+        <path d="M 0 4 A 9 3 0 0 0 18 4 L 18 16 A 9 3 0 0 1 0 16 Z" fill="#fef3c7" stroke="#d97706" stroke-opacity="0.7"/>
+      </g>
+      <g transform="translate(191,16)">
+        <rect x="0" y="10" width="4" height="6" fill="#bfdbfe" stroke="#0284c7" stroke-opacity="0.7"/>
+        <rect x="6" y="6" width="4" height="10" fill="#bfdbfe" stroke="#0284c7" stroke-opacity="0.7"/>
+        <rect x="12" y="2" width="4" height="14" fill="#bfdbfe" stroke="#0284c7" stroke-opacity="0.7"/>
+      </g>
+      <g transform="translate(291,16)">
+        <rect x="0" y="0" width="18" height="4" rx="2" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+        <rect x="0" y="6" width="14" height="4" rx="2" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+        <rect x="0" y="12" width="18" height="4" rx="2" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/>
+      </g>
+      <g transform="translate(391,16)">
+        <path d="M 11 0 L 0 10 L 6 10 L 2 16 L 14 6 L 8 6 Z" fill="#ddd6fe" stroke="#8b5cf6" stroke-opacity="0.7"/>
+      </g>
+      <g transform="translate(491,16)">
+        <circle cx="5" cy="4" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/>
+        <circle cx="13" cy="4" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/>
+        <circle cx="5" cy="12" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/>
+        <circle cx="13" cy="12" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/>
+      </g>
+      <g transform="translate(591,16)">
+        <circle cx="9" cy="8" r="8" fill="none" stroke="#6366f1" stroke-opacity="0.7" stroke-width="2"/>
+        <line x1="9" y1="8" x2="9" y2="3" stroke="#6366f1" stroke-opacity="0.7" stroke-width="2"/>
+        <line x1="9" y1="8" x2="13" y2="8" stroke="#6366f1" stroke-opacity="0.7" stroke-width="2"/>
+      </g>
+      <g transform="translate(691,16)">
+        <polyline points="0,8 5,8 8,1 11,15 14,8 18,8" fill="none" stroke="#e11d48" stroke-opacity="0.7" stroke-width="2"/>
+      </g>
+      <g transform="translate(791,16)">
+        <polyline points="0,0 10,8 0,16" fill="none" stroke="#d97706" stroke-opacity="0.7" stroke-width="2"/>
+        <polyline points="7,0 17,8 7,16" fill="none" stroke="#d97706" stroke-opacity="0.4" stroke-width="2"/>
+      </g>
+      <g transform="translate(891,16)">
+        <path d="M 8 0 L 16 4 V 9 Q 16 15 8 16 Q 0 15 0 9 V 4 Z" fill="#a5f3fc" stroke="#0891b2" stroke-opacity="0.7"/>
+      </g>
+      <text x="100" y="64" text-anchor="middle" font-size="11" fill="#475569">database</text>
+      <text x="200" y="64" text-anchor="middle" font-size="11" fill="#475569">API</text>
+      <text x="300" y="64" text-anchor="middle" font-size="11" fill="#475569">queue</text>
+      <text x="400" y="64" text-anchor="middle" font-size="11" fill="#475569">cache</text>
+      <text x="500" y="64" text-anchor="middle" font-size="11" fill="#475569">worker</text>
+      <text x="600" y="64" text-anchor="middle" font-size="11" fill="#475569">scheduler</text>
+      <text x="700" y="64" text-anchor="middle" font-size="11" fill="#475569">observability</text>
+      <text x="800" y="64" text-anchor="middle" font-size="11" fill="#475569">gateway</text>
+      <text x="900" y="64" text-anchor="middle" font-size="11" fill="#475569">security</text>
+    </svg>
+  </div>
+  <div style="flex:1 1 100%;min-width:0">
+<pre><code>&lt;!-- each glyph: local 18×16 origin, translate to (box inset, title baseline − 16) --&gt;
+&lt;g transform="translate(91,16)"&gt;&lt;!-- database: mini cylinder (§4.6) --&gt;
+  &lt;ellipse cx="9" cy="4" rx="9" ry="3" fill="#fde68a" stroke="#d97706" stroke-opacity="0.7"/&gt;
+  &lt;path d="M 0 4 A 9 3 0 0 0 18 4 L 18 16 A 9 3 0 0 1 0 16 Z"
+        fill="#fef3c7" stroke="#d97706" stroke-opacity="0.7"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(191,16)"&gt;&lt;!-- API: 3 rects --&gt;
+  &lt;rect x="0" y="10" width="4" height="6" fill="#bfdbfe" stroke="#0284c7" stroke-opacity="0.7"/&gt;
+  &lt;rect x="6" y="6" width="4" height="10" fill="#bfdbfe" stroke="#0284c7" stroke-opacity="0.7"/&gt;
+  &lt;rect x="12" y="2" width="4" height="14" fill="#bfdbfe" stroke="#0284c7" stroke-opacity="0.7"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(291,16)"&gt;&lt;!-- queue: 3 rounded bars --&gt;
+  &lt;rect x="0" y="0" width="18" height="4" rx="2" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/&gt;
+  &lt;rect x="0" y="6" width="14" height="4" rx="2" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/&gt;
+  &lt;rect x="0" y="12" width="18" height="4" rx="2" fill="#a7f3d0" stroke="#10b981" stroke-opacity="0.7"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(391,16)"&gt;&lt;!-- cache: bolt --&gt;
+  &lt;path d="M 11 0 L 0 10 L 6 10 L 2 16 L 14 6 L 8 6 Z"
+        fill="#ddd6fe" stroke="#8b5cf6" stroke-opacity="0.7"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(491,16)"&gt;&lt;!-- worker: 2×2 dots --&gt;
+  &lt;circle cx="5" cy="4" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/&gt;
+  &lt;circle cx="13" cy="4" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/&gt;
+  &lt;circle cx="5" cy="12" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/&gt;
+  &lt;circle cx="13" cy="12" r="2.5" fill="#99f6e4" stroke="#0d9488" stroke-opacity="0.7"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(591,16)"&gt;&lt;!-- scheduler: clock --&gt;
+  &lt;circle cx="9" cy="8" r="8" fill="none" stroke="#6366f1" stroke-opacity="0.7" stroke-width="2"/&gt;
+  &lt;line x1="9" y1="8" x2="9" y2="3" stroke="#6366f1" stroke-opacity="0.7" stroke-width="2"/&gt;
+  &lt;line x1="9" y1="8" x2="13" y2="8" stroke="#6366f1" stroke-opacity="0.7" stroke-width="2"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(691,16)"&gt;&lt;!-- observability: pulse --&gt;
+  &lt;polyline points="0,8 5,8 8,1 11,15 14,8 18,8" fill="none"
+            stroke="#e11d48" stroke-opacity="0.7" stroke-width="2"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(791,16)"&gt;&lt;!-- gateway: double chevron --&gt;
+  &lt;polyline points="0,0 10,8 0,16" fill="none" stroke="#d97706" stroke-opacity="0.7" stroke-width="2"/&gt;
+  &lt;polyline points="7,0 17,8 7,16" fill="none" stroke="#d97706" stroke-opacity="0.4" stroke-width="2"/&gt;
+&lt;/g&gt;
+&lt;g transform="translate(891,16)"&gt;&lt;!-- security: shield --&gt;
+  &lt;path d="M 8 0 L 16 4 V 9 Q 16 15 8 16 Q 0 15 0 9 V 4 Z"
+        fill="#a5f3fc" stroke="#0891b2" stroke-opacity="0.7"/&gt;
+&lt;/g&gt;</code></pre>
+  </div>
+</div>
+
+<h3>4.8 Vertical side bar (cross-cutting concern)</h3>
+<p>80 px-wide rounded rect beside the tiers, vertical 3-stop gradient.
+Text rotated -90° around the bar center. Bar length ≥ longest label + 20 px.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 340 230" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <linearGradient id="demo-rose" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff1f2"/>
+          <stop offset="0.5" stop-color="#ffe4e6"/>
+          <stop offset="1" stop-color="#fff1f2"/>
+        </linearGradient>
+      </defs>
+      <rect width="340" height="230" fill="#ffffff"/>
+      <rect x="180" y="14" width="80" height="202" rx="12" fill="url(#demo-rose)" stroke="#e11d48" stroke-opacity="0.5"/>
+      <text transform="rotate(-90 214 115)" x="214" y="115" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2" fill="#be123c">SECURITY</text>
+      <text transform="rotate(-90 236 115)" x="236" y="115" text-anchor="middle" font-size="10.5" fill="#be123c" opacity="0.85">mechanism detail</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;defs&gt;
+  &lt;linearGradient id="demo-rose" x1="0" y1="0" x2="0" y2="1"&gt;
+    &lt;stop offset="0" stop-color="#fff1f2"/&gt;
+    &lt;stop offset="0.5" stop-color="#ffe4e6"/&gt;
+    &lt;stop offset="1" stop-color="#fff1f2"/&gt;
+  &lt;/linearGradient&gt;
+&lt;/defs&gt;
+
+&lt;rect x="180" y="14" width="80" height="202" rx="12"
+      fill="url(#demo-rose)" stroke="#e11d48" stroke-opacity="0.5"/&gt;
+&lt;!-- rotate around the bar's own center; keep bar ≥
+     longest label + 20 px --&gt;
+&lt;text transform="rotate(-90 214 115)" x="214" y="115"
+      text-anchor="middle" font-size="13" font-weight="700"
+      letter-spacing="2" fill="#be123c"&gt;SECURITY&lt;/text&gt;
+&lt;text transform="rotate(-90 236 115)" x="236" y="115"
+      text-anchor="middle" font-size="10.5" fill="#be123c"
+      opacity="0.85"&gt;mechanism detail&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="connections">5. Connections &amp; Arrows</h2>
+
+<h3>5.1 Arrow markers</h3>
+<p>Define one marker per stroke color in <code>&lt;defs&gt;</code>,
+<code>markerUnits="userSpaceOnUse"</code>. Numbered flow arrows are always
+slate <code>#475569</code> — the numbered badge carries the step color.
+Colored lines (with a matching-color marker) are reserved for non-numbered
+special links, e.g. a sync or query path.</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 130" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <marker id="demo-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+        </marker>
+        <marker id="demo-arrow-violet" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#8b5cf6"/>
+        </marker>
+      </defs>
+      <rect width="460" height="130" fill="#ffffff"/>
+      <line x1="40" y1="34" x2="400" y2="34" stroke="#475569" stroke-width="2" marker-end="url(#demo-arrow)"/>
+      <text x="40" y="24" font-size="11.5" fill="#475569">default · 2 px solid</text>
+      <line x1="40" y1="70" x2="400" y2="70" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#demo-arrow-violet)"/>
+      <text x="40" y="60" font-size="11.5" fill="#6d28d9">colored · dashed 5 4</text>
+      <path d="M 40 100 L 120 100 L 120 118 L 220 118" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#demo-arrow)"/>
+      <text x="230" y="122" font-size="11.5" fill="#475569">elbow path · right-angle bends only</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;defs&gt;
+  &lt;marker id="demo-arrow" markerWidth="9" markerHeight="9"
+          refX="7" refY="4.5" orient="auto"
+          markerUnits="userSpaceOnUse"&gt;
+    &lt;path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/&gt;
+  &lt;/marker&gt;
+  &lt;marker id="demo-arrow-violet" markerWidth="9" markerHeight="9"
+          refX="7" refY="4.5" orient="auto"
+          markerUnits="userSpaceOnUse"&gt;
+    &lt;path d="M0,0 L9,4.5 L0,9 Z" fill="#8b5cf6"/&gt;
+  &lt;/marker&gt;
+&lt;/defs&gt;
+
+&lt;!-- default: 2 px slate solid --&gt;
+&lt;line x1="40" y1="34" x2="400" y2="34" stroke="#475569"
+      stroke-width="2" marker-end="url(#demo-arrow)"/&gt;
+&lt;text x="40" y="24" font-size="11.5" fill="#475569"&gt;
+      default · 2 px solid&lt;/text&gt;
+&lt;!-- colored + dashed: matching-color marker --&gt;
+&lt;line x1="40" y1="70" x2="400" y2="70" stroke="#8b5cf6"
+      stroke-width="2" stroke-dasharray="5 4"
+      marker-end="url(#demo-arrow-violet)"/&gt;
+&lt;text x="40" y="60" font-size="11.5" fill="#6d28d9"&gt;
+      colored · dashed 5 4&lt;/text&gt;
+&lt;!-- elbow: L segments only, keep points inside margins --&gt;
+&lt;path d="M 40 100 L 120 100 L 120 118 L 220 118"
+      fill="none" stroke="#475569" stroke-width="2"
+      marker-end="url(#demo-arrow)"/&gt;
+&lt;text x="230" y="122" font-size="11.5" fill="#475569"&gt;
+      elbow path · right-angle bends only&lt;/text&gt;</code></pre>
+  </div>
+</div>
+
+<h3>5.2 Numbered flow badges</h3>
+<p>Circle r = 11 in the step's tier color, white bold number, at the line
+midpoint; text baseline = center + 4. The legend repeats the same badge.</p>
+<ul>
+  <li>In a node panel's 10 px inner gap, a tick's badge is centered on the tick; the r = 11 circle overlaps the adjacent box edges — accepted.</li>
+  <li>A corridor arrow routed between a tier's border and its boxes: keep the line ≥ 4 px from the border; the badge may cross the container border but never a box or text.</li>
+</ul>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 460 60" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <marker id="demo-arrow-b" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+        </marker>
+      </defs>
+      <rect width="460" height="60" fill="#ffffff"/>
+      <line x1="30" y1="30" x2="430" y2="30" stroke="#475569" stroke-width="2" marker-end="url(#demo-arrow-b)"/>
+      <circle cx="150" cy="30" r="11" fill="#0284c7"/>
+      <text x="150" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+      <circle cx="260" cy="30" r="11" fill="#10b981"/>
+      <text x="260" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+      <circle cx="360" cy="30" r="11" fill="#d97706"/>
+      <text x="360" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;defs&gt;
+  &lt;marker id="demo-arrow-b" markerWidth="9" markerHeight="9"
+          refX="7" refY="4.5" orient="auto"
+          markerUnits="userSpaceOnUse"&gt;
+    &lt;path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/&gt;
+  &lt;/marker&gt;
+&lt;/defs&gt;
+
+&lt;line x1="30" y1="30" x2="430" y2="30" stroke="#475569"
+      stroke-width="2" marker-end="url(#demo-arrow-b)"/&gt;
+&lt;circle cx="150" cy="30" r="11" fill="#0284c7"/&gt;
+&lt;text x="150" y="34" text-anchor="middle" font-size="12"
+      font-weight="700" fill="#ffffff"&gt;1&lt;/text&gt;
+&lt;circle cx="260" cy="30" r="11" fill="#10b981"/&gt;
+&lt;text x="260" y="34" text-anchor="middle" font-size="12"
+      font-weight="700" fill="#ffffff"&gt;2&lt;/text&gt;
+&lt;circle cx="360" cy="30" r="11" fill="#d97706"/&gt;
+&lt;text x="360" y="34" text-anchor="middle" font-size="12"
+      font-weight="700" fill="#ffffff"&gt;3&lt;/text&gt;
+&lt;!-- badge at the line midpoint · text baseline = center + 4 --&gt;</code></pre>
+  </div>
+</div>
+
+<h3>5.3 Connection rules</h3>
+<ul>
+  <li>All connector strokes are <code>2 px</code>; default color <code>#475569</code>.</li>
+  <li>Straight lines only, or right-angle elbow <code>&lt;path&gt;</code>s — no diagonals between tiers.</li>
+  <li>Arrows start 2–4 px after the source edge and end so the arrowhead tip lands 4–6 px before the target edge.</li>
+  <li><strong>Endpoints must land on a box edge.</strong> For a horizontal arrow, its y must lie inside the vertical range of both the source and the target box (a panel edge counts as its box's edge). Never end in a gap between boxes or outside a container — check every arrow's endpoint against the box coordinates before drawing.</li>
+  <li>Gaps smaller than 14 px: see 5.4.</li>
+  <li>Vertical arrows entering a tier must not cross its label text: place the line's x beyond the tier label's text end + 8 px.</li>
+  <li><strong>Clean corridors:</strong> a vertical arrow's x must pass no box, no horizontal connector and no text from source to target. A horizontal connector spanning a gap makes that gap an invalid corridor at every height. If no clean corridor exists, in order: (1) move the arrow to another corridor, (2) reroute the crossing connector as an elbow around the corridor, (3) demote the secondary relationship to a text note inside a box, (4) last resort one orthogonal line-line crossing that touches no label, badge or box edge.</li>
+  <li><strong>Arrow labels:</strong> one per arrow, 11.5 px. Color: <code>#475569</code> for slate lines; for a colored line, use that tier's mid-text color (e.g. <code>#6d28d9</code> on the violet sync link). Vertical line → label at the line's midpoint, 14 px to the right (left if the right side is occupied). Horizontal line without a badge → label centered above, 10 px up. Horizontal line with a numbered badge → label to the left of the badge, text-anchor end at badge x − 20, 10 px above the line; the label must fit in the gap left of the badge. Format: <code>action · :port</code> when a port is involved. Labels must not cross box edges or the tier-label band. A label needs ≥ 16 px of free room around it; if the gap is narrower, widen the gap — never shrink the font.</li>
+  <li>Internal count markers (e.g. “×3 instances”) reuse the badge style in violet.</li>
+</ul>
+
+<h3>5.4 Very short gaps</h3>
+<ul>
+  <li><strong>Gap ≥ 14 px</strong>: normal arrow with offsets and clearance.</li>
+  <li><strong>Gap 8–13 px</strong>: plain 2 px line, no marker — a short tick reads as direction by position alone.</li>
+  <li><strong>Gap &lt; 8 px</strong>: no connector. Boxes that close read as one unit; if they are one component, merge them and use a hairline divider inside.</li>
+  <li><strong>Layout first</strong>: if two boxes exchange traffic, give them a ≥ 16 px gap so a real arrow fits.</li>
+</ul>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <marker id="sd-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+        </marker>
+      </defs>
+      <rect width="480" height="150" fill="#ffffff"/>
+      <rect x="20" y="14" width="130" height="40" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+      <text x="85" y="34" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">source</text>
+      <rect x="20" y="86" width="130" height="40" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+      <text x="85" y="106" text-anchor="middle" font-size="12" font-weight="600" fill="#0c4a6e">target</text>
+      <line x1="85" y1="58" x2="85" y2="80" stroke="#475569" stroke-width="2" marker-end="url(#sd-arrow)"/>
+      <text x="85" y="142" text-anchor="middle" font-size="11.5" fill="#475569">gap 32 → normal arrow</text>
+      <rect x="175" y="14" width="130" height="40" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.55"/>
+      <text x="240" y="34" text-anchor="middle" font-size="12" font-weight="600" fill="#4c1d95">source</text>
+      <rect x="175" y="66" width="130" height="40" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.55"/>
+      <text x="240" y="86" text-anchor="middle" font-size="12" font-weight="600" fill="#4c1d95">target</text>
+      <line x1="240" y1="58" x2="240" y2="62" stroke="#475569" stroke-width="2"/>
+      <text x="240" y="142" text-anchor="middle" font-size="11.5" fill="#475569">gap 12 → plain tick, no head</text>
+      <rect x="330" y="14" width="130" height="40" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+      <text x="395" y="34" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">source</text>
+      <rect x="330" y="60" width="130" height="40" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+      <text x="395" y="80" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">target</text>
+      <text x="395" y="142" text-anchor="middle" font-size="11.5" fill="#475569">gap 6 → no connector</text>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;defs&gt;
+  &lt;marker id="sd-arrow" markerWidth="9" markerHeight="9"
+          refX="7" refY="4.5" orient="auto"
+          markerUnits="userSpaceOnUse"&gt;
+    &lt;path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/&gt;
+  &lt;/marker&gt;
+&lt;/defs&gt;
+
+&lt;!-- gap ≥ 14: normal arrow --&gt;
+&lt;line x1="85" y1="58" x2="85" y2="80" stroke="#475569"
+      stroke-width="2" marker-end="url(#sd-arrow)"/&gt;
+
+&lt;!-- gap 8–13: plain tick, no marker --&gt;
+&lt;line x1="240" y1="58" x2="240" y2="62"
+      stroke="#475569" stroke-width="2"/&gt;
+
+&lt;!-- gap &lt; 8: nothing; widen the gap to ≥ 16
+     or merge the boxes with a hairline divider --&gt;</code></pre>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="legend">6. Legend &amp; Annotations</h2>
+
+<p>One horizontal row, ~20 px above the canvas bottom (badge bottom to edge), 11.5 px in
+<code>#475569</code>. Each entry = miniature element + label. Flow steps reuse
+the numbered badge (white number inside the colored circle). End with a
+muted <code>#64748b</code> facts line (e.g. port list).</p>
+
+<div class="card">
+  <div class="demo">
+    <svg viewBox="0 0 760 60" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <marker id="demo-arrow-lg" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#8b5cf6"/>
+        </marker>
+      </defs>
+      <rect width="760" height="60" fill="#ffffff"/>
+      <g font-size="11.5" fill="#475569">
+        <circle cx="40" cy="30" r="11" fill="#0284c7"/><text x="40" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text><text x="59" y="34">step one</text>
+        <circle cx="170" cy="30" r="11" fill="#10b981"/><text x="170" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text><text x="189" y="34">step two</text>
+        <circle cx="300" cy="30" r="11" fill="#8b5cf6"/><text x="300" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text><text x="319" y="34">step three</text>
+        <line x1="430" y1="30" x2="465" y2="30" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#demo-arrow-lg)"/><text x="473" y="34">sync link</text>
+        <rect x="570" y="22" width="18" height="16" rx="4" fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="594" y="34">core component</text>
+        <text x="740" y="34" fill="#64748b" text-anchor="end">ports: 0000 · 0001</text>
+      </g>
+    </svg>
+  </div>
+  <div>
+<pre><code>&lt;defs&gt;
+  &lt;marker id="demo-arrow-lg" markerWidth="9" markerHeight="9"
+          refX="7" refY="4.5" orient="auto"
+          markerUnits="userSpaceOnUse"&gt;
+    &lt;path d="M0,0 L9,4.5 L0,9 Z" fill="#8b5cf6"/&gt;
+  &lt;/marker&gt;
+&lt;/defs&gt;
+
+&lt;g font-size="11.5" fill="#475569"&gt;
+  &lt;circle cx="40" cy="30" r="11" fill="#0284c7"/&gt;
+  &lt;text x="40" y="34" text-anchor="middle" font-size="12"
+        font-weight="700" fill="#ffffff"&gt;1&lt;/text&gt;
+  &lt;text x="59" y="34"&gt;step one&lt;/text&gt;
+  &lt;circle cx="170" cy="30" r="11" fill="#10b981"/&gt;
+  &lt;text x="170" y="34" text-anchor="middle" font-size="12"
+        font-weight="700" fill="#ffffff"&gt;2&lt;/text&gt;
+  &lt;text x="189" y="34"&gt;step two&lt;/text&gt;
+  &lt;circle cx="300" cy="30" r="11" fill="#8b5cf6"/&gt;
+  &lt;text x="300" y="34" text-anchor="middle" font-size="12"
+        font-weight="700" fill="#ffffff"&gt;3&lt;/text&gt;
+  &lt;text x="319" y="34"&gt;step three&lt;/text&gt;
+  &lt;line x1="430" y1="30" x2="465" y2="30" stroke="#8b5cf6"
+        stroke-width="2" stroke-dasharray="5 4"
+        marker-end="url(#demo-arrow-lg)"/&gt;
+  &lt;text x="473" y="34"&gt;sync link&lt;/text&gt;
+  &lt;rect x="570" y="22" width="18" height="16" rx="4"
+        fill="#f8fafc" stroke="#8b5cf6" stroke-opacity="0.5"/&gt;
+  &lt;text x="594" y="34"&gt;core component&lt;/text&gt;
+  &lt;text x="740" y="34" fill="#64748b" text-anchor="end"&gt;
+      ports: 0000 · 0001&lt;/text&gt;
+&lt;/g&gt;</code></pre>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="layout">7. Layout Rules</h2>
+
+<table>
+  <tr><th>Rule</th><th>Value</th></tr>
+  <tr><td>Outer canvas margin</td><td>40 px left/right (content from x = 40 to x = width−40)</td></tr>
+  <tr><td>Content width</td><td>Tier containers span the full content width</td></tr>
+  <tr><td>Gap between tiers</td><td>16 px</td></tr>
+  <tr><td>Inset of boxes inside a tier</td><td>20 px from tier edges</td></tr>
+  <tr><td>Gap between sibling boxes</td><td>20 px horizontal, 10 px vertical; keep all gaps in a tier uniform. Wider gaps only for a documented routing lane (§5.3 clean corridors)</td></tr>
+  <tr><td>Tier container height</td><td>Label at top + 20, boxes at top + 26–46, ≥ 16 px below the last box; resize the container when content moves</td></tr>
+  <tr><td>Text inset inside a box</td><td>20 px from the box's left edge (22 for hero boxes, §4.3 · 16 for inner boxes in node panels)</td></tr>
+  <tr><td>Box title baseline</td><td>~24 px below box top</td></tr>
+  <tr><td>Body line height</td><td>22 px</td></tr>
+  <tr><td>Text bottom padding</td><td>≥ 8 px below the last baseline before the box edge</td></tr>
+  <tr><td>Corner radii</td><td>Tier 14 · hero box 12 · box 10 · pill height/2 · legend swatch 4</td></tr>
+  <tr><td>Legend row</td><td>Bottom of canvas, ~20 px above the edge (badge bottom to canvas edge)</td></tr>
+  <tr><td>Side bar</td><td>80 px wide, right of content, spans all tiers, 20 px gap</td></tr>
+</table>
+
+<p><strong>Structure order</strong> (top → bottom): title block → client tier → core
+tier (tallest) → data tier → execution tier → legend. Cross-cutting concerns
+(auth, logging) go in the side bar. <strong>Draw order:</strong> background → tiers →
+boxes → text → arrows last.</p>
+
+<div class="rule"><strong>One accent hue per tier.</strong> Components sharing a tier share its
+hue and differ by stroke style (solid / dashed / thicker) — never by color.</div>
+
+<div class="rule"><strong>Fill the row.</strong> Boxes in a tier row span the tier's inner width
+or tile it with the standard gap — no dead zone wider than one standard gap,
+except a routing lane. <strong>Re-check after edits:</strong> deleting, moving <em>or
+resizing</em> an element (including adding/removing a body line) invalidates the
+gaps and heights around it; re-verify every affected gap, box height and
+tier height before finishing. The same arithmetic applies when generating a
+diagram from scratch.</div>
+
+<!-- ============================================================ -->
+<h2 id="adapt">8. Adapting the System</h2>
+
+<h3>Swapping a tier's accent color</h3>
+<ul>
+  <li>Pick a Tailwind 500- or 600-shade hue (e.g. <code>#059669</code>, <code>#0891b2</code>, <code>#7c3aed</code> — all 600).</li>
+  <li>Derive the shades from the same hue: 50/100 for fills, 700–900 for titles, 600–700 for body text, 500–600 for accents and strokes (see the §2 table).</li>
+  <li>If a colored marker or numbered badge exists for this tier, recolor them too.</li>
+  <li>Keep neutrals unchanged — the tier system stays readable as long as fills stay light (50–100) and text stays dark (600–900).</li>
+</ul>
+
+<h3>Adding a tier</h3>
+<ul>
+  <li>Insert a new container between existing tiers; re-flow the 16 px gaps.</li>
+  <li>Grow the canvas <code>viewBox</code> height by the tier's height + 16, and move all tiers below it down by the same amount (including the legend).</li>
+  <li>Give the new tier an unused hue from the palette table.</li>
+</ul>
+
+<h3>Choosing a hue for a new tier</h3>
+<ul>
+  <li>Blue = users/inputs, violet = control/core, amber = data/storage, green = compute/execution, rose = security.</li>
+  <li>Reserved spares: cyan <code>#0891b2</code>, teal <code>#0d9488</code>, indigo <code>#6366f1</code>, slate <code>#64748b</code> (neutral components).</li>
+  <li>Never reuse a hue already used by another tier in the same diagram.</li>
+</ul>
+
+<h3>Sequence / request–response diagrams (two hosts)</h3>
+<ul>
+  <li>Hosts are panels (one box per host, §10.2) on the left and right; the gap between them is the network path.</li>
+  <li>One arrow per step, between the two panels' side edges; steps read top-to-bottom and are numbered with badges.</li>
+  <li>Every numbered step gets a distinct badge hue: tier accents first, then the reserved spares (cyan, teal, indigo). Never repeat a color within one diagram.</li>
+  <li>Space arrows ≥ 22 px apart so each line, badge and label clear the neighboring lines.</li>
+  <li>Inner boxes inside each panel describe the stack (layers, ports); arrows target the host panel, and the label carries the step semantics.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="template">9. Starter Template</h2>
+
+<p>Skeleton for a new diagram. Placeholders: <code>ACCENT</code>, <code>ACCENT2</code>,
+<code>LIGHT</code>, <code>DARK</code> (per-tier shades from §2; <code>ACCENT2</code> is the
+second tier's accent).</p>
+
+<pre><code>&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800"
+     font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto,
+                 Helvetica, Arial, sans-serif"&gt;
+  &lt;defs&gt;
+    &lt;marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5"
+            orient="auto" markerUnits="userSpaceOnUse"&gt;
+      &lt;path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/&gt;
+    &lt;/marker&gt;
+  &lt;/defs&gt;
+
+  &lt;rect x="0" y="0" width="1280" height="800" fill="#ffffff"/&gt;
+
+  &lt;text x="640" y="40" text-anchor="middle" font-size="26"
+        font-weight="700" fill="#0f172a"&gt;Title — Subtitle&lt;/text&gt;
+  &lt;text x="640" y="64" text-anchor="middle" font-size="14"
+        fill="#475569"&gt;Context · line&lt;/text&gt;
+
+  &lt;!-- TIER 1 --&gt;
+  &lt;rect x="40" y="78" width="1200" height="120" rx="14"
+        fill="#f1f5f9" stroke="#e2e8f0"/&gt;
+  &lt;text x="60" y="98" font-size="12" font-weight="700"
+        letter-spacing="2" fill="ACCENT"&gt;TIER ONE&lt;/text&gt;
+  &lt;rect x="60" y="110" width="380" height="70" rx="10"
+        fill="LIGHT" stroke="ACCENT" stroke-opacity="0.55"/&gt;
+  &lt;text x="80" y="136" font-size="14.5" font-weight="700"
+        fill="DARK"&gt;Component &lt;tspan fill="ACCENT" font-size="11.5"&gt;· detail&lt;/tspan&gt;&lt;/text&gt;
+  &lt;text x="80" y="160" font-size="12.5" fill="#475569"&gt;detail line&lt;/text&gt;
+
+  &lt;!-- TIER 2 (y = 78 + 120 + 16) --&gt;
+  &lt;rect x="40" y="214" width="1200" height="120" rx="14"
+        fill="#f1f5f9" stroke="#e2e8f0"/&gt;
+  &lt;text x="60" y="234" font-size="12" font-weight="700"
+        letter-spacing="2" fill="ACCENT2"&gt;TIER TWO&lt;/text&gt;
+
+  &lt;!-- ARROWS (drawn last) --&gt;
+  &lt;line x1="250" y1="182" x2="250" y2="208" stroke="#475569"
+        stroke-width="2" marker-end="url(#arrow)"/&gt;
+  &lt;circle cx="250" cy="194" r="11" fill="ACCENT"/&gt;
+  &lt;text x="250" y="198" text-anchor="middle" font-size="12"
+        font-weight="700" fill="#ffffff"&gt;1&lt;/text&gt;
+  &lt;text x="268" y="198" font-size="11.5" fill="#475569"&gt;label&lt;/text&gt;
+
+  &lt;!-- LEGEND --&gt;
+  &lt;g font-size="11.5" fill="#475569"&gt;
+    &lt;circle cx="70" cy="780" r="11" fill="ACCENT"/&gt;
+    &lt;text x="70" y="784" text-anchor="middle" font-size="12"
+          font-weight="700" fill="#ffffff"&gt;1&lt;/text&gt;
+    &lt;text x="88" y="784"&gt;step one&lt;/text&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;</code></pre>
+
+<!-- ============================================================ -->
+<h2 id="examples">10. Examples &amp; Common Mistakes</h2>
+
+<h3>10.1 Worked example: layered architecture</h3>
+<p>Complete diagram built strictly from the rules: four tiers, four hues,
+four numbered flows, one dashed HA sync link, one DB box with the §4.6 mini
+cylinder glyph, one scaled-out node panel and one auth side bar.</p>
+
+<div class="card">
+  <div class="demo" style="flex:1 1 100%;min-width:0">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 824" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="sl-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+    </marker>
+    <marker id="sl-arrow-violet" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#8b5cf6"/>
+    </marker>
+    <linearGradient id="sl-hero" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5f3ff"/>
+      <stop offset="1" stop-color="#ede9fe"/>
+    </linearGradient>
+    <linearGradient id="sl-munge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff1f2"/>
+      <stop offset="0.5" stop-color="#ffe4e6"/>
+      <stop offset="1" stop-color="#fff1f2"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1280" height="824" fill="#ffffff"/>
+
+  <text x="640" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Slurm Workload Manager — Architecture</text>
+  <text x="640" y="64" text-anchor="middle" font-size="14" fill="#475569">SchedMD · open-source cluster management &amp; job scheduling · daemons talk over authenticated RPCs</text>
+
+  <!-- CLIENT TIER -->
+  <rect x="40" y="78" width="1100" height="104" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="98" font-size="12" font-weight="700" letter-spacing="2" fill="#0284c7">CLIENT TIER</text>
+  <rect x="60" y="108" width="475" height="58" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="80" y="132" font-size="14.5" font-weight="700" fill="#0c4a6e">CLI tools (run anywhere on the cluster)</text>
+  <text x="80" y="154" font-size="12.5" fill="#475569">sbatch · srun · squeue · sinfo · scontrol · sacct · sview · 10+ more</text>
+  <rect x="555" y="108" width="565" height="58" rx="10" fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.55"/>
+  <text x="575" y="132" font-size="14.5" font-weight="700" fill="#0c4a6e">REST / web / automation clients</text>
+  <text x="575" y="154" font-size="12.5" fill="#475569">HTTP + JSON/YAML · OpenAPI v3 spec · JWT auth</text>
+
+  <!-- CONTROL TIER -->
+  <rect x="40" y="198" width="1100" height="222" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="218" font-size="12" font-weight="700" letter-spacing="2" fill="#8b5cf6">CONTROL TIER · HIGH AVAILABILITY</text>
+
+  <rect x="60" y="228" width="520" height="160" rx="12" fill="url(#sl-hero)" stroke="#8b5cf6" stroke-opacity="0.8" stroke-width="1.5"/>
+  <text x="82" y="252" font-size="16" font-weight="700" fill="#4c1d95">slurmctld — central controller <tspan fill="#8b5cf6" font-size="11.5">· :6817</tspan></text>
+  <line x1="82" y1="264" x2="558" y2="264" stroke="#8b5cf6" stroke-opacity="0.35"/>
+  <text x="82" y="288" font-size="12.5" fill="#6d28d9">job queue · fair-share / priority scheduling · resource allocation</text>
+  <text x="82" y="310" font-size="12.5" fill="#6d28d9">node &amp; state tracking · preemption · power · config repo</text>
+  <text x="82" y="338" font-size="12.5" fill="#475569">plugin slots (dynamically loaded):</text>
+  <rect x="82" y="348" width="52" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="108" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">sched</text>
+  <rect x="140" y="348" width="58" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="169" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">select</text>
+  <rect x="204" y="348" width="44" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="226" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">topo</text>
+  <rect x="254" y="348" width="64" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="286" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">cgroup</text>
+  <rect x="324" y="348" width="50" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="349" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">power</text>
+  <rect x="380" y="348" width="66" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="413" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">account</text>
+  <rect x="452" y="348" width="86" height="22" rx="11" fill="#ede9fe" stroke="#8b5cf6" stroke-opacity="0.5"/><text x="495" y="363" text-anchor="middle" font-size="11.5" fill="#5b21b6">… more</text>
+
+  <rect x="650" y="228" width="470" height="52" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.6"/>
+  <text x="670" y="250" font-size="14" font-weight="700" fill="#4c1d95">slurmrestd — REST API gateway <tspan fill="#8b5cf6" font-size="11.5">· :6820</tspan></text>
+  <text x="670" y="270" font-size="12" fill="#475569">stateless · proxies to slurmctld &amp; slurmdbd · JWT or MUNGE auth</text>
+
+  <rect x="650" y="290" width="470" height="52" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.5" stroke-dasharray="5 4"/>
+  <text x="670" y="312" font-size="14" font-weight="700" fill="#6d28d9">slurmctld standby</text>
+  <text x="670" y="332" font-size="12" fill="#475569">state-synced pair with the primary (SlurmctldHost) · automatic failover</text>
+
+  <rect x="650" y="352" width="470" height="52" rx="10" fill="#f5f3ff" stroke="#8b5cf6" stroke-opacity="0.5"/>
+  <text x="670" y="374" font-size="14" font-weight="700" fill="#6d28d9">slurmscriptd — script offload <tspan fill="#475569" font-size="11.5">(24.05+)</tspan></text>
+  <text x="670" y="394" font-size="12" fill="#475569">runs prolog/epilog, cgroup &amp; launch scripts so slurmctld stays responsive</text>
+
+  <!-- DB TIER -->
+  <rect x="40" y="436" width="1100" height="120" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="456" font-size="12" font-weight="700" letter-spacing="2" fill="#d97706">ACCOUNTING / CONFIG DB TIER</text>
+  <rect x="60" y="462" width="460" height="78" rx="10" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.6"/>
+  <text x="80" y="486" font-size="14.5" font-weight="700" fill="#92400e">slurmdbd — accounting &amp; config daemon <tspan fill="#d97706" font-size="11.5">· :6819</tspan></text>
+  <text x="80" y="508" font-size="12.5" fill="#b45309">one per site · job &amp; user accounting · QoS · fair-share</text>
+  <text x="80" y="530" font-size="12.5" fill="#475569">stores config in the cluster database</text>
+
+  <rect x="580" y="462" width="540" height="78" rx="10" fill="#fffbeb" stroke="#d97706" stroke-opacity="0.6"/>
+  <path d="M 600 474 A 9 3 0 0 0 618 474 L 618 486 A 9 3 0 0 1 600 486 Z" fill="#fef3c7" stroke="#d97706" stroke-opacity="0.7"/>
+  <ellipse cx="609" cy="474" rx="9" ry="3" fill="#fde68a" stroke="#d97706" stroke-opacity="0.7"/>
+  <text x="626" y="486" font-size="14.5" font-weight="700" fill="#92400e">MariaDB / MySQL</text>
+  <text x="626" y="508" font-size="12.5" fill="#b45309">job history · cluster configuration</text>
+  <text x="626" y="530" font-size="12.5" fill="#475569">shared by slurmdbd and slurmrestd</text>
+
+  <!-- COMPUTE TIER -->
+  <rect x="40" y="572" width="1100" height="210" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="592" font-size="12" font-weight="700" letter-spacing="2" fill="#10b981">COMPUTE TIER · PER-NODE SLURMD</text>
+
+  <rect x="60" y="598" width="345" height="168" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.7" stroke-width="1.5"/>
+  <text x="232" y="620" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">compute node (cn-001)</text>
+  <rect x="76" y="624" width="313" height="44" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.45"/>
+  <text x="92" y="642" font-size="13" font-weight="700" fill="#047857">slurmd <tspan fill="#10b981" font-size="11">· :6818</tspan></text>
+  <text x="92" y="660" font-size="11.5" fill="#475569">node daemon — launches/monitors/kills tasks</text>
+  <rect x="76" y="678" width="313" height="38" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="92" y="696" font-size="13" font-weight="700" fill="#047857">slurmstepd (one per job step)</text>
+  <text x="92" y="712" font-size="11.5" fill="#475569">launches app tasks · per-step I/O &amp; limits (cgroup)</text>
+  <rect x="76" y="726" width="313" height="30" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.35"/>
+  <text x="232" y="744" text-anchor="middle" font-size="12" fill="#065f46">user application (tasks / MPI ranks)</text>
+  <line x1="233" y1="671" x2="233" y2="675" stroke="#475569" stroke-width="2"/>
+  <circle cx="233" cy="673" r="11" fill="#8b5cf6"/>
+  <text x="233" y="677" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+
+  <rect x="425" y="598" width="345" height="168" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.5"/>
+  <text x="597" y="620" text-anchor="middle" font-size="13.5" font-weight="700" fill="#065f46">compute node (cn-002)</text>
+  <rect x="441" y="624" width="313" height="44" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="457" y="642" font-size="13" font-weight="700" fill="#047857">slurmd <tspan fill="#10b981" font-size="11">· :6818</tspan></text>
+  <text x="457" y="660" font-size="11.5" fill="#475569">node daemon</text>
+  <rect x="441" y="678" width="313" height="38" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="457" y="696" font-size="13" font-weight="700" fill="#047857">slurmstepd</text>
+  <text x="457" y="712" font-size="11.5" fill="#475569">per-step launch &amp; I/O</text>
+  <rect x="441" y="726" width="313" height="30" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.3"/>
+  <text x="597" y="744" text-anchor="middle" font-size="12" fill="#065f46">user application</text>
+  <line x1="597" y1="671" x2="597" y2="675" stroke="#475569" stroke-width="2"/>
+
+  <rect x="790" y="598" width="330" height="168" rx="12" fill="none" stroke="#10b981" stroke-opacity="0.45" stroke-dasharray="6 5"/>
+  <text x="955" y="664" text-anchor="middle" font-size="30" fill="#10b981" opacity="0.55">…</text>
+  <text x="955" y="696" text-anchor="middle" font-size="12.5" fill="#475569">up to hundreds of thousands of nodes</text>
+  <text x="955" y="716" text-anchor="middle" font-size="12.5" fill="#475569">hierarchical topology plugin &amp; fanout</text>
+  <text x="955" y="736" text-anchor="middle" font-size="12.5" fill="#475569">“configless” slurmd pulls config from slurmctld</text>
+
+  <!-- AUTH side bar -->
+  <rect x="1160" y="78" width="80" height="704" rx="12" fill="url(#sl-munge)" stroke="#e11d48" stroke-opacity="0.5"/>
+  <text transform="rotate(-90 1194 430)" x="1194" y="430" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2" fill="#be123c">AUTH · EVERY RPC</text>
+  <text transform="rotate(-90 1216 430)" x="1216" y="430" text-anchor="middle" font-size="10.5" fill="#be123c" opacity="0.85">MUNGE (default) — munged, shared munge.key</text>
+  <text transform="rotate(-90 1234 430)" x="1234" y="430" text-anchor="middle" font-size="10.5" fill="#be123c" opacity="0.85">SACK (23.11+) — auth/slurm · cred/slurm · sackd on login nodes</text>
+
+  <!-- FLOW ARROWS (drawn last; tip = endpoint + 2 px, 5 px clearance) -->
+  <line x1="430" y1="169" x2="430" y2="221" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/>
+  <circle cx="430" cy="195" r="11" fill="#0284c7"/>
+  <text x="430" y="199" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+  <text x="444" y="199" font-size="11.5" fill="#475569">sbatch/srun request · :6817</text>
+
+  <line x1="865" y1="169" x2="865" y2="221" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/>
+  <text x="879" y="199" font-size="11.5" fill="#475569">HTTP + JWT · :6820</text>
+
+  <line x1="653" y1="254" x2="587" y2="254" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/>
+  <text x="619" y="244" text-anchor="middle" font-size="11.5" fill="#475569">proxy</text>
+
+  <line x1="653" y1="316" x2="587" y2="316" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#sl-arrow-violet)"/>
+  <text x="619" y="306" text-anchor="middle" font-size="11.5" fill="#6d28d9">sync</text>
+
+  <line x1="360" y1="391" x2="360" y2="455" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/>
+  <circle cx="360" cy="423" r="11" fill="#d97706"/>
+  <text x="360" y="427" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text>
+  <text x="374" y="427" font-size="11.5" fill="#475569">accounting · :6819</text>
+
+  <line x1="523" y1="498" x2="573" y2="498" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/>
+  <text x="548" y="488" text-anchor="middle" font-size="11.5" fill="#475569">query</text>
+
+  <path d="M 63 318 L 48 318 L 48 640 L 53 640" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/>
+  <circle cx="48" cy="479" r="11" fill="#10b981"/>
+  <text x="48" y="483" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+  <text transform="rotate(-90 32 566)" x="32" y="566" text-anchor="middle" font-size="11.5" fill="#475569">allocate · launch · :6818</text>
+
+  <!-- LEGEND (badge bottom 804, 20 px above the canvas bottom) -->
+  <g font-size="11.5" fill="#475569">
+    <circle cx="70" cy="793" r="11" fill="#0284c7"/><text x="70" y="797" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text><text x="89" y="797">submit</text>
+    <circle cx="170" cy="793" r="11" fill="#10b981"/><text x="170" y="797" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text><text x="189" y="797">allocate / launch</text>
+    <circle cx="320" cy="793" r="11" fill="#8b5cf6"/><text x="320" y="797" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text><text x="339" y="797">run</text>
+    <circle cx="396" cy="793" r="11" fill="#d97706"/><text x="396" y="797" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text><text x="415" y="797">accounting</text>
+    <line x1="510" y1="793" x2="550" y2="793" stroke="#475569" stroke-width="2" marker-end="url(#sl-arrow)"/><text x="558" y="797">proxy</text>
+    <line x1="610" y1="793" x2="650" y2="793" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#sl-arrow-violet)"/><text x="658" y="797">HA state sync</text>
+    <rect x="780" y="785" width="18" height="16" rx="4" fill="none" stroke="#10b981" stroke-opacity="0.5" stroke-dasharray="6 5"/><text x="804" y="797">scale-out</text>
+    <text x="1240" y="797" fill="#64748b" text-anchor="end">ports: 6817 ctld · 6818 slurmd · 6819 dbd · 6820 restd</text>
+  </g>
+</svg>
+  </div>
+</div>
+
+<h3>10.2 Worked example: sequence / request–response</h3>
+<p>Two-host diagram built from the §8 sequence rules: host panels on left and
+right, the gap between them as the network path, one arrow per step
+(≥ 22 px apart, endpoints inside the panel range), each step a distinct
+badge hue.</p>
+
+<div class="card">
+  <div class="demo" style="flex:1 1 100%;min-width:0">
+    <svg viewBox="0 0 1160 580" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+      <defs>
+        <marker id="seq-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5"
+                orient="auto" markerUnits="userSpaceOnUse">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+        </marker>
+      </defs>
+
+      <rect x="0" y="0" width="1160" height="580" fill="#ffffff"/>
+      <text x="580" y="40" text-anchor="middle" font-size="26"
+            font-weight="700" fill="#0f172a">HTTP over TCP — Client to Server</text>
+      <text x="580" y="64" text-anchor="middle" font-size="14"
+            fill="#475569">TCP handshake · HTTP request · HTTP response · close · one connection, port 80</text>
+
+      <!-- NETWORK PATH (gap between hosts) -->
+      <text x="580" y="140" text-anchor="middle" font-size="12"
+            font-weight="700" letter-spacing="2" fill="#64748b">NETWORK PATH · Routers · Switches</text>
+
+      <!-- CLIENT PANEL (blue = clients) -->
+      <rect x="40" y="150" width="340" height="236" rx="12"
+            fill="#eff6ff" stroke="#0284c7" stroke-opacity="0.7" stroke-width="1.5"/>
+      <text x="210" y="178" text-anchor="middle" font-size="13.5"
+            font-weight="700" fill="#0c4a6e">client host (10.0.0.12)</text>
+
+      <rect x="56" y="192" width="308" height="52" rx="8"
+            fill="#dbeafe" stroke="#0284c7" stroke-opacity="0.45"/>
+      <text x="72" y="212" font-size="13" font-weight="700" fill="#0c4a6e">browser (application) <tspan fill="#0284c7" font-size="11">· HTTP client</tspan></text>
+      <text x="72" y="232" font-size="11.5" fill="#475569">sends HTTP requests from the user</text>
+
+      <line x1="210" y1="244" x2="210" y2="254" stroke="#0284c7" stroke-width="2"/>
+
+      <rect x="56" y="254" width="308" height="52" rx="8"
+            fill="#dbeafe" stroke="#0284c7" stroke-opacity="0.4"/>
+      <text x="72" y="274" font-size="13" font-weight="700" fill="#0c4a6e">TCP (transport) <tspan fill="#0284c7" font-size="11">· :52344</tspan></text>
+      <text x="72" y="294" font-size="11.5" fill="#475569">segments · ordering · reliability</text>
+
+      <line x1="210" y1="306" x2="210" y2="316" stroke="#0284c7" stroke-width="2"/>
+
+      <rect x="56" y="316" width="308" height="52" rx="8"
+            fill="#dbeafe" stroke="#0284c7" stroke-opacity="0.35"/>
+      <text x="72" y="336" font-size="13" font-weight="700" fill="#0c4a6e">IP (network)</text>
+      <text x="72" y="356" font-size="11.5" fill="#475569">packets · addressing · routing</text>
+
+      <!-- SERVER PANEL (green = compute) -->
+      <rect x="780" y="150" width="340" height="236" rx="12"
+            fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.7" stroke-width="1.5"/>
+      <text x="950" y="178" text-anchor="middle" font-size="13.5"
+            font-weight="700" fill="#065f46">server host (10.0.0.1)</text>
+
+      <rect x="796" y="192" width="308" height="52" rx="8"
+            fill="#d1fae5" stroke="#10b981" stroke-opacity="0.45"/>
+      <text x="812" y="212" font-size="13" font-weight="700" fill="#065f46">web server (application) <tspan fill="#10b981" font-size="11">· :80</tspan></text>
+      <text x="812" y="232" font-size="11.5" fill="#475569">answers with HTTP on port 80</text>
+
+      <line x1="950" y1="244" x2="950" y2="254" stroke="#10b981" stroke-width="2"/>
+
+      <rect x="796" y="254" width="308" height="52" rx="8"
+            fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+      <text x="812" y="274" font-size="13" font-weight="700" fill="#065f46">TCP (transport) <tspan fill="#10b981" font-size="11">· :80</tspan></text>
+      <text x="812" y="294" font-size="11.5" fill="#475569">listens for connections on port 80</text>
+
+      <line x1="950" y1="306" x2="950" y2="316" stroke="#10b981" stroke-width="2"/>
+
+      <rect x="796" y="316" width="308" height="52" rx="8"
+            fill="#d1fae5" stroke="#10b981" stroke-opacity="0.35"/>
+      <text x="812" y="336" font-size="13" font-weight="700" fill="#065f46">IP (network)</text>
+      <text x="812" y="356" font-size="11.5" fill="#475569">10.0.0.1 · reachable via routers</text>
+
+      <!-- FLOW ARROWS (drawn last; one per step, ≥ 22 px apart, endpoints inside panel range 150..386) -->
+      <line x1="384" y1="172" x2="773" y2="172" stroke="#475569" stroke-width="2" marker-end="url(#seq-arrow)"/>
+      <text x="560" y="162" text-anchor="end" font-size="11.5" fill="#475569">SYN · open connection</text>
+      <circle cx="580" cy="172" r="11" fill="#0284c7"/>
+      <text x="580" y="176" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+
+      <line x1="783" y1="212" x2="387" y2="212" stroke="#475569" stroke-width="2" marker-end="url(#seq-arrow)"/>
+      <text x="560" y="202" text-anchor="end" font-size="11.5" fill="#475569">SYN-ACK · accept</text>
+      <circle cx="580" cy="212" r="11" fill="#10b981"/>
+      <text x="580" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+
+      <line x1="384" y1="252" x2="773" y2="252" stroke="#475569" stroke-width="2" marker-end="url(#seq-arrow)"/>
+      <text x="560" y="242" text-anchor="end" font-size="11.5" fill="#475569">ACK · connection open</text>
+      <circle cx="580" cy="252" r="11" fill="#8b5cf6"/>
+      <text x="580" y="256" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+
+      <line x1="384" y1="292" x2="773" y2="292" stroke="#475569" stroke-width="2" marker-end="url(#seq-arrow)"/>
+      <text x="560" y="282" text-anchor="end" font-size="11.5" fill="#475569">GET / · HTTP request · :80</text>
+      <circle cx="580" cy="292" r="11" fill="#d97706"/>
+      <text x="580" y="296" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text>
+
+      <line x1="783" y1="332" x2="387" y2="332" stroke="#475569" stroke-width="2" marker-end="url(#seq-arrow)"/>
+      <text x="560" y="322" text-anchor="end" font-size="11.5" fill="#475569">HTTP 200 · response</text>
+      <circle cx="580" cy="332" r="11" fill="#e11d48"/>
+      <text x="580" y="336" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">5</text>
+
+      <line x1="384" y1="372" x2="773" y2="372" stroke="#475569" stroke-width="2" marker-end="url(#seq-arrow)"/>
+      <text x="560" y="362" text-anchor="end" font-size="11.5" fill="#475569">FIN · close</text>
+      <circle cx="580" cy="372" r="11" fill="#0891b2"/>
+      <text x="580" y="376" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">6</text>
+
+      <!-- LEGEND -->
+      <g font-size="11.5" fill="#475569">
+        <circle cx="70" cy="548" r="11" fill="#0284c7"/><text x="70" y="552" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text><text x="89" y="552">SYN</text>
+        <circle cx="190" cy="548" r="11" fill="#10b981"/><text x="190" y="552" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text><text x="209" y="552">SYN-ACK</text>
+        <circle cx="310" cy="548" r="11" fill="#8b5cf6"/><text x="310" y="552" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text><text x="329" y="552">ACK</text>
+        <circle cx="430" cy="548" r="11" fill="#d97706"/><text x="430" y="552" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text><text x="449" y="552">HTTP request</text>
+        <circle cx="570" cy="548" r="11" fill="#e11d48"/><text x="570" y="552" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">5</text><text x="589" y="552">HTTP response</text>
+        <circle cx="730" cy="548" r="11" fill="#0891b2"/><text x="730" y="552" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">6</text><text x="749" y="552">FIN</text>
+        <text x="1120" y="552" fill="#64748b" text-anchor="end">client :52344 · server :80 · one connection</text>
+      </g>
+    </svg>
+    <p class="caption">Sequence pattern: host panels describe the stack; arrows target the panel; badges number the steps.</p>
+  </div>
+</div>
+
+<h3>10.3 Common mistakes (final check)</h3>
+<ul>
+  <li>Diagonal arrows — use straight lines or right-angle elbows only (§5.3).</li>
+  <li>Two hues in one tier — components in a tier share its accent and differ by stroke style, never by color (§7).</li>
+  <li>Full-opacity strokes on light boxes — standard boxes at 0.4–0.6, hero boxes 0.7–0.8 with 1.5 px; full opacity is for arrows and markers only (§2).</li>
+  <li>Arrow or label crossing tier-label text — route the line's x beyond the label's text end + 8 px (§5.3).</li>
+  <li>Arrow label touching its own line or badge — use the exact §5.3 offsets (badge x − 20, line y − 10); check every label, not just the first.</li>
+  <li>Empty space — after any layout or content change, re-run the §7 checks: row filled, gaps uniform, container height fits content.</li>
+</ul>
+
+<p class="caption" style="margin-top:32px">SVG Diagram Style Guide — layered architecture diagram blueprint · v1.0 · 2026-11-12</p>
+
+</body>
+</html>
