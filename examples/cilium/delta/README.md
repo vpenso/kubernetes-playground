@@ -8,6 +8,8 @@ date-modified: 2026/11/16
 
 # Deployment
 
+## Kind
+
 Delta = gamma (native routing) plus one new key: **layer-2 (L2) announcements**
 
 ```bash
@@ -31,16 +33,13 @@ delta-worker3        172.19.0.4       56:a4:1e:5b:70:a6
 delta-worker         172.19.0.5       6a:58:37:b4:9b:24
 ```
 
-Deploy Cilium
+## Cilium
 
 ```bash
 cilium install --values cilium.yaml
 ```
 
-With **`l2announcements.enabled: true`**...
-
-* Cilium advertises pod IPs to devices outside the cluster via gratuitous ARP (L2).
-* This makes pod IPs reachable from the external network without extra NAT.
+With **`l2announcements.enabled: true`** - Advertises pod IPs to devices outside the cluster 
 
 Find the network prefix for the kind cluster, here `172.19.`
 
@@ -83,24 +82,32 @@ delta-pool   false      False         50              6m6s
   
 # Configuration
 
-## LB-IPAM
+## Load-Balance
 
-LB-IPAM is a controller in the `cilium-operator`
+LoadBalancer IP Address Management[^Z321A] (LB-IPAM) is a controller in the `cilium-operator`
 
-* Gives LoadBalancer Services their external IP from a pool
+[^Z321A]: LoadBalancer IP Address Management, Cilium Documentation  
+<https://docs.cilium.io/en/stable/network/lb-ipam>
+
+* Responsible for allocation and **assigning of IPs to Service objects**
+  - Always enabled but dormant
+  - Awoken when the first IP Pool is added to the cluster
 * How it works....
   - A CiliumLoadBalancerIPPool holds blocks of addresses, e.g. 172.18.255.200-250
   - The controller watches Services with type: LoadBalancer
   - For each, it takes a free address and writes it to `status.loadBalancer.ingress[0].ip`
 * What it does not do...
   - It only allocates. It does not make the IP reachable.
-  - Reachability comes from L2 announcements via ARP
+  - Reachability comes in conjuntion with other components
+    - L2 announcements (local)
+    - BGP control plane
 
 ## L2 Announcement
 
+L2 announcements[^P2asW] make one Kind node answer ARP for a LoadBalancer IP
 
-
-L2 announcements make one Kind node answer ARP for a LoadBalancer IP
+[^P2asW]: L2 Announcements / L2 Aware LB, Cilium Documentation  
+<https://docs.cilium.io/en/stable/network/l2-announcements>
 
 * ...so the host can reach that IP on the Docker bridge
 * How it works...
