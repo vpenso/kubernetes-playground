@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 624"
+     font-family="ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5"
+            orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1160" height="624" fill="#ffffff"/>
+
+  <text x="580" y="40" text-anchor="middle" font-size="26" font-weight="700" fill="#0f172a">Pod-to-Pod Traffic — Tunnel vs Native Routing</text>
+  <text x="580" y="64" text-anchor="middle" font-size="14" fill="#475569">Cilium on kind · cluster “native” · podSubnet 10.244.0.0/16 · one /24 per node</text>
+
+  <!-- TUNNEL TIER (indigo) -->
+  <rect x="40" y="88" width="1080" height="196" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="108" font-size="12" font-weight="700" letter-spacing="2" fill="#6366f1">TUNNEL ROUTING · VXLAN</text>
+
+  <!-- left node -->
+  <rect x="60" y="124" width="330" height="132" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.55"/>
+  <text x="80" y="148" font-size="14.5" font-weight="700" fill="#3730a3">beta-worker <tspan fill="#6366f1" font-size="11.5">· 172.18.0.2</tspan></text>
+  <text x="80" y="170" font-size="12.5" fill="#475569">cilium_vxlan · encapsulates · UDP 8472</text>
+  <rect x="76" y="190" width="298" height="44" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-opacity="0.4"/>
+  <text x="92" y="210" font-size="13" font-weight="700" fill="#3730a3">pod A · 10.244.1.5</text>
+  <text x="92" y="226" font-size="11.5" fill="#475569">podCIDR 10.244.1.0/24</text>
+
+  <!-- right node -->
+  <rect x="770" y="124" width="330" height="132" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.55"/>
+  <text x="790" y="148" font-size="14.5" font-weight="700" fill="#3730a3">beta-worker2 <tspan fill="#6366f1" font-size="11.5">· 172.18.0.3</tspan></text>
+  <text x="790" y="170" font-size="12.5" fill="#475569">cilium_vxlan · decapsulates</text>
+  <rect x="786" y="190" width="298" height="44" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-opacity="0.4"/>
+  <text x="802" y="210" font-size="13" font-weight="700" fill="#3730a3">pod B · 10.244.2.7</text>
+  <text x="802" y="226" font-size="11.5" fill="#475569">podCIDR 10.244.2.0/24</text>
+
+  <!-- packet stack in the gap -->
+  <rect x="477" y="136" width="206" height="22" rx="11" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.5"/>
+  <text x="580" y="151" text-anchor="middle" font-size="11.5" fill="#4338ca">outer: 172.18.0.2 → 172.18.0.3</text>
+  <rect x="496" y="164" width="168" height="22" rx="11" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.5"/>
+  <text x="580" y="179" text-anchor="middle" font-size="11.5" fill="#4338ca">UDP 8472 + VXLAN (+50 B)</text>
+  <rect x="477" y="192" width="206" height="22" rx="11" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.5"/>
+  <text x="580" y="207" text-anchor="middle" font-size="11.5" fill="#4338ca">inner: 10.244.1.5 → 10.244.2.7</text>
+
+  <!-- tunnel flow arrow -->
+  <line x1="394" y1="244" x2="764" y2="244" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="580" y="234" text-anchor="middle" font-size="11.5" fill="#475569">encapsulated · network sees node IPs only</text>
+
+  <!-- NATIVE TIER (green) -->
+  <rect x="40" y="300" width="1080" height="196" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="60" y="320" font-size="12" font-weight="700" letter-spacing="2" fill="#10b981">NATIVE ROUTING · DIRECT L2</text>
+
+  <!-- left node -->
+  <rect x="60" y="336" width="330" height="132" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+  <text x="80" y="360" font-size="14.5" font-weight="700" fill="#065f46">gamma-worker <tspan fill="#10b981" font-size="11.5">· 172.18.0.2</tspan></text>
+  <text x="80" y="382" font-size="12.5" fill="#475569">route 10.244.2.0/24 via 172.18.0.3</text>
+  <rect x="76" y="402" width="298" height="44" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="92" y="422" font-size="13" font-weight="700" fill="#065f46">pod A · 10.244.1.5</text>
+  <text x="92" y="438" font-size="11.5" fill="#475569">podCIDR 10.244.1.0/24</text>
+
+  <!-- right node -->
+  <rect x="770" y="336" width="330" height="132" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.55"/>
+  <text x="790" y="360" font-size="14.5" font-weight="700" fill="#065f46">gamma-worker2 <tspan fill="#10b981" font-size="11.5">· 172.18.0.3</tspan></text>
+  <text x="790" y="382" font-size="12.5" fill="#475569">route 10.244.1.0/24 via 172.18.0.2</text>
+  <rect x="786" y="402" width="298" height="44" rx="8" fill="#d1fae5" stroke="#10b981" stroke-opacity="0.4"/>
+  <text x="802" y="422" font-size="13" font-weight="700" fill="#065f46">pod B · 10.244.2.7</text>
+  <text x="802" y="438" font-size="11.5" fill="#475569">podCIDR 10.244.2.0/24</text>
+
+  <!-- native flow arrow -->
+  <line x1="394" y1="456" x2="764" y2="456" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="580" y="446" text-anchor="middle" font-size="11.5" fill="#475569">direct · pod IPs on the wire · no VXLAN header</text>
+
+  <!-- DIFF SUMMARY -->
+  <rect x="40" y="512" width="346" height="56" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="60" y="536" font-size="12.5" font-weight="700" fill="#0f172a">Network sees pod CIDRs</text>
+  <text x="60" y="556" font-size="12" fill="#475569">tunnel: no · native: yes</text>
+
+  <rect x="407" y="512" width="346" height="56" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="427" y="536" font-size="12.5" font-weight="700" fill="#0f172a">Extra header per packet</text>
+  <text x="427" y="556" font-size="12" fill="#475569">tunnel: +50 B VXLAN · native: none</text>
+
+  <rect x="774" y="512" width="346" height="56" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="794" y="536" font-size="12.5" font-weight="700" fill="#0f172a">Pod IPs on the wire</text>
+  <text x="794" y="556" font-size="12" fill="#475569">tunnel: hidden · native: visible</text>
+
+  <!-- LEGEND -->
+  <g font-size="11.5" fill="#475569">
+    <rect x="40" y="588" width="18" height="16" rx="4" fill="#eef2ff" stroke="#6366f1" stroke-opacity="0.5"/>
+    <text x="64" y="600">tunnel path</text>
+    <rect x="250" y="588" width="18" height="16" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-opacity="0.5"/>
+    <text x="274" y="600">native path</text>
+    <line x1="450" y1="596" x2="490" y2="596" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="498" y="600">pod-to-pod flow</text>
+    <text x="1120" y="600" fill="#64748b" text-anchor="end">kind “native” · 4 nodes · podSubnet 10.244.0.0/16 · BPF masquerade</text>
+  </g>
+</svg>

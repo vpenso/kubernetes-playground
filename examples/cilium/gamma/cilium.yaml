@@ -1,0 +1,5 @@
+routingMode: native
+ipv4NativeRoutingCIDR: 10.244.0.0/16   # == kind podSubnet
+autoDirectNodeRoutes: true             # nodes share an L2 (docker bridge)
+bpf: {masquerade: true}
+hubble: {relay: {enabled: true}}
